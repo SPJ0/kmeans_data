@@ -73,7 +73,8 @@ def _vertex_order(faces, adj, start_face):
     return order
 
 
-def solve_affine(faces, allow_zero=True, pure_sign=None, all_solutions=False):
+def solve_affine(faces, allow_zero=True, pure_sign=None, all_solutions=False,
+                 max_solutions=None):
     """Find phi (dict vertex -> F_3^2 point) satisfying the sign rules.
 
     pure_sign: if 1, force every face sign to be 1 (pure frieze case).
@@ -90,6 +91,9 @@ def solve_affine(faces, allow_zero=True, pure_sign=None, all_solutions=False):
         norms.append(((0, 0), (1, 0), (2, 0)))
 
     for norm in norms:
+        if (all_solutions and max_solutions is not None
+                and len(results) >= max_solutions):
+            break
         f0 = face_list[0]
         phi = {f0[0]: norm[0], f0[1]: norm[1], f0[2]: norm[2]}
         signs = [None] * nfaces
@@ -120,7 +124,10 @@ def solve_affine(faces, allow_zero=True, pure_sign=None, all_solutions=False):
         def bt(k):
             if k == len(rest):
                 results.append((dict(phi), list(signs)))
-                return not all_solutions
+                if not all_solutions:
+                    return True
+                return (max_solutions is not None
+                        and len(results) >= max_solutions)
             v = rest[k]
             for p in F3SQ:
                 if any(u in phi and phi[u] == p for u in adj[v]):

@@ -158,3 +158,27 @@ def random_triangulation(n, seed=None, mix=None):
     faces = bipyramid(n - 2)
     return random_flips(faces, mix if mix is not None else 10 * n,
                         seed=rng.randrange(1 << 30))
+
+
+def contractible_neighbors(faces, v):
+    """Neighbors u of v such that edge (v,u) is contractible keeping the
+    triangulation simple: common neighbors of v,u are exactly the two
+    opposite face vertices."""
+    adj = adjacency(faces)
+    third = edge_faces(faces)
+    out = []
+    for u in adj[v]:
+        w, x = third[(v, u)], third[(u, v)]
+        if adj[v] & adj[u] == {w, x}:
+            out.append(u)
+    return out
+
+
+def contract(faces, v, u):
+    """Contract edge (v,u), merging v into u.  Assumes contractibility."""
+    out = []
+    for f in faces:
+        if v in f and u in f:
+            continue
+        out.append(tuple(u if t == v else t for t in f))
+    return out
