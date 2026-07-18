@@ -325,6 +325,35 @@ over the classical Tait picture.  The question is whether that freedom
 is always enough to fix orientation and parity — experimentally, it
 always has been.
 
+## 8.6 Proven infinite families (transfer-matrix method)
+
+Because all constraints of a "cylindrical" triangulation are windowed
+over a bounded band, valid representations correspond to closed walks
+in a finite transfer digraph, and closed walks of two coprime lengths
+through a common node give all sufficiently large sizes by Frobenius
+composition.  Small sizes are verified directly; every composed
+representation is checked independently.  This yields machine-assisted
+but finitely-verified theorems:
+
+**Theorem 5.**  *Every bipyramid (double wheel) admits an affine
+representation, hence a diagonal 9-coloring.*  (Transfer digraph on
+color pairs with apexes normalized to (0,0), (1,1) — legitimate by
+2-transitivity of `AGL(2,3)`; loops of lengths 4 and 5 at a common
+node; all `m ≥ 12` by composition, `m ≤ 11` direct.  exp13.)
+
+**Theorem 6.**  *Every capped antiprism (gyroelongated bipyramid;
+`m = 5` is the icosahedron) admits an affine representation.*  All its
+ring vertices have degree 5, so this is an infinite family inside the
+critical minimum-degree-5 class.  (Transfer digraph on rung 4-tuples:
+306 nodes; closed walks of lengths 3 and 5 at a common node, Frobenius
+number 7; all `m ≥ 8` by composition, `m = 3..7` direct.  exp14,
+exp14b.)
+
+The same method mechanically extends to any bounded-bandwidth family
+(stacked prisms/drums of bounded ring size, etc.); the general
+minimum-degree-5 case needs an argument that handles unbounded layer
+sizes.
+
 ## 9. Conjecture and proof program
 
 **Conjecture A (Affine Nine).**  Every simple triangulation of the
