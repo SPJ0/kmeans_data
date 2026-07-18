@@ -29,7 +29,7 @@ Code: `src/`.  Experiments (each reproducible): `experiments/`.
   representations (enumeration counts match known values at every n).
 - Every extremal instance found with diagonal chromatic number 9
   (including one whose conflict graph is K₉) admits one.
-- Min-degree-5 family: geodesic spheres to n = 162, flip variants,
+- Min-degree-5 family: geodesic spheres to n = 642, flip variants,
   hill-climbed instances — all pass.
 - Dead ends killed by finite proof, not by wandering: naive contraction
   induction (rigid degree-3 sites), universal local extension lemmas
