@@ -505,3 +505,33 @@ Status of the attack routes:
    formulation, but a crude entropy count (6 cross-ratio values per
    edge against `|PGL(2,8)| = 504` per vertex relation) suggests it is
    tighter than the affine formulation; kept as a reserve line.
+
+## 10. Main-term positivity (Theorem 10)
+
+In the Theorem 9 sum, restrict to charge fields `c ∈ ker ∂` (all face
+sums zero — the untwisted sector).  There `C_t = 0`, every rank term
+vanishes, and the inner sum over `S` is Whitney's rank expansion of
+the chromatic polynomial: `Σ_S (-1)^{|S|} 9^{comp(S)} = P(T, 9)`.
+Fourier inversion of the weight `χ(0) = 2, χ(±1) = -1` (via
+`χ(x) = Σ_{y ≠ 0} ω^{xy}`) evaluates the kernel-sector coefficient:
+
+    Σ_{c ∈ ker ∂} Π_d χ(c_d)  =  |ker ∂| · #{ y nowhere-zero,
+                                    y_d = τ_f + τ_g for some τ } ,
+
+verified exactly (tetrahedron: 90 = 9·10; bipyramid(3): 702 = 27·26).
+The `y`-count is at least 2 (constant `τ ≡ 1` or `2`), and
+`P(T, 9) > 0` for every planar graph (5-degeneracy suffices; no 4CT
+needed).  Hence:
+
+**Theorem 10.**  *The untwisted (kernel) sector of the Theorem 9
+lattice sum contributes*
+`3^{-D} · |ker ∂| · #{valid y} · P(T, 9) > 0`
+*for every sphere triangulation.  The Nine Conjecture is exactly the
+statement that the twisted sectors (`∂c ≠ 0`) never annihilate this
+chromatic main term.*
+
+The final shape of the problem: a strictly positive "classical" term
+(proper 9-colorings, i.e. the trivial part of the representation
+theory) against twisted corrections indexed by nontrivial `F_3`
+face-weightings, each weighted by `3^{-rank}` of its coboundary — a
+signal-versus-twist domination question, group theory to the end.
