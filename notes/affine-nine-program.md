@@ -432,9 +432,29 @@ of Weil representations and theta-like sums rather than graph
 coloring.  The group theory has moved from `SL(2,3)` monodromy to the
 metaplectic/Weil side: the Gauss sums `G(Q_t)` are matrix coefficients
 of the Weil representation of `Sp` over `F_3`, and the Witt signs
-`ε_t` are its quadratic characters.  Determining the sign pattern
-`ε_t` combinatorially (e.g. via the domain topology of `t`) is the
-concrete open task on this route.
+`ε_t` are its quadratic characters.  (Theorem 8 subsequently resolved
+the sign pattern completely: `ε_t = +1` always.)
+
+**Theorem 9 (exact formula for the full count; verified).**  Writing
+`D` for the dual edges, `comp(S)` for the number of components of
+`(V, S)`, and `Cbar_{∂c}(S)` for the `S`-contracted difference matrix,
+
+    N_valid(T) = Σ_{S ⊆ E} (-1)^{|S|} Σ_{c ∈ F_3^D}
+                 (2/3)^{z(c)} (-1/3)^{|D| - z(c)}
+                 3^{ 2·comp(S) - rank Cbar_{∂c}(S) } ,
+
+where `z(c)` counts zero charges and `t = ∂c` weights each face by the
+sum of its dual-edge charges.  Derivation: Fourier expansion of the
+compatibility indicator (coefficients `δ_{c,0} - 1/3`),
+inclusion-exclusion over the nowhere-zero-tension condition
+(contracting each `S`), and Theorem 8's positive Gauss sums applied on
+the quotient multigraphs.  Verified exactly on the tetrahedron:
+`N_valid = 1728` by brute force and by the formula (`1728 = 4 · 432`,
+i.e. four `AGL(2,3)`-orbits of representations).  **The Nine
+Conjecture is equivalent to the positivity of this double lattice sum
+for every sphere triangulation** — all Gauss-sum inputs are positive;
+the only negative contributions are inclusion-exclusion signs and the
+charge weights `(-1/3)`.
 
 ## 9. Conjecture and proof program
 
