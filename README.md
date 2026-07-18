@@ -25,8 +25,8 @@ Code: `src/`.  Experiments (each reproducible): `experiments/`.
 
 ## Verification record
 
-- **Exhaustive**: all 9,149 sphere triangulations with n ≤ 12 admit
-  representations (enumeration counts match known values).
+- **Exhaustive**: all 58,715 sphere triangulations with n ≤ 13 admit
+  representations (enumeration counts match known values at every n).
 - Every extremal instance found with diagonal chromatic number 9
   (including one whose conflict graph is K₉) admits one.
 - Min-degree-5 family: geodesic spheres to n = 162, flip variants,
