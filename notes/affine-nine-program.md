@@ -283,6 +283,35 @@ Tait-coloring-like problem: a bounded local alphabet, local
 constraints, and a parity/flow flavor — but over the *projective line
 over F_3* instead of three edge colors.
 
+## 8.4 The defect calculus
+
+Two more facts sharpen the slope picture (exp11, exp12):
+
+* **Corner identity / even total defect.**  The three corner bits of
+  any face XOR to zero, so summing vertex parities over all vertices
+  counts each face's corners once and gives zero: *the number of
+  parity-defective vertices of any locally-valid slope field is even.*
+  Defects are charges that come in pairs.
+* **Gauge dependence.**  Individual corner bits depend on the chosen
+  section `w : PG(1,3) -> F_3^2 \ 0` (a gauge); only the vertex
+  parities' vanishing is invariant.  In the standard gauge, corner
+  bits vanish on faces with three finite slopes and are governed on
+  `inf`-faces by the harmonic structure of `PG(1,3)` (any four
+  distinct points of the projective line over `F_3` form a harmonic
+  range).
+* **Tait start and defect annihilation.**  A Tait coloring (which
+  exists by 4CT) is a slope field with all faces rainbow on 3 slopes;
+  its defects are sign mismatches on dual edges plus vertex parities.
+  Greedy single-edge re-sloping annihilates all defects on some
+  instances (octahedron, bipyramids) but gets stuck on others
+  (icosahedron) even though valid fields exist there — single-edge
+  moves are provably too weak a move set, and the natural remedy is
+  Kempe-style chain moves: swapping two slopes along an alternating
+  cycle, i.e. the `S_4` action applied along cycles of the field.
+  Formalizing a defect-transport move ("re-slope along a path to move
+  a parity charge, then annihilate charge pairs") is the concrete next
+  step of this program.
+
 ## 8.5 Connection to Tait colorings
 
 If one insists on using only 3 of the 4 slopes with all faces rainbow,
