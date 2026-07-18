@@ -354,6 +354,53 @@ The same method mechanically extends to any bounded-bandwidth family
 minimum-degree-5 case needs an argument that handles unbounded layer
 sizes.
 
+## 8.7 The Gauss-sum formula (Weil-representation avenue)
+
+Let `N_1(T)` be the number of *pure* representations (`s(f) = 1` for
+every face).  Expanding the indicator over additive characters of
+`F_3`:
+
+    N_1(T) = 3^{-F} Σ_{t ∈ F_3^F}  ω^{-Σ_f t_f} · G(Q_t) ,
+    Q_t(φ) = Σ_f t_f · s_f(φ) ,     ω = e^{2πi/3} ,
+
+and the key structural facts (verified exactly on test cases, exp15):
+
+* `Q_t` is a quadratic form on `F_3^{2n}` with Gram matrix
+  `C_t ⊗ J`, where `J` is the symplectic form on `F_3^2` and `C_t` is
+  the **antisymmetric edge matrix** `C_t[u,v] = t(f_left) - t(f_right)`
+  — the coboundary of the face-weighting `t` across each edge.
+* `|G(Q_t)| = 3^{2n - rank C_t}` for every `t` (checked for all
+  `3^F` weightings on the test triangulations), so
+
+      N_1(T) = 3^{2n-F} Σ_t  ω^{-Σ t} · ε_t · 3^{-rank C_t}
+
+  with `ε_t` a Witt sign.  Since `2n - F = 4` on the sphere:
+  `N_1 = 81 · Σ_t ω^{-Σt} ε_t 3^{-rank C_t}`.
+* `rank C_t` is a purely combinatorial quantity: `C_t` vanishes on
+  edges interior to level sets of `t` on the dual graph, so the sum is
+  a **Potts-like domain-wall model**: `t` = an `F_3`-spin
+  configuration on faces, weighted by `3^{-rank(boundary operator)}`
+  with cube-root-of-unity phases.  Constant `t` gives the leading term.
+
+Verified: tetrahedron (`N_1 = 0`, and the character sum vanishes
+exactly — the phases conspire against the positive leading term, as
+they must since `F ≢ 0 mod 3` forbids pure representations) and
+bipyramid(3) (`N_1 = 648` both ways, exact).
+
+The same expansion applies to the fold-allowing count (the indicator
+of `{1, 2, fold}` produces a few character terms per face instead of
+one), giving an exact formula for the number of affine representations
+as a finite lattice sum of Gauss sums.  **The Nine Conjecture is
+thereby equivalent to the positivity of an explicit
+Potts-with-phases partition function** — a statement in the territory
+of Weil representations and theta-like sums rather than graph
+coloring.  The group theory has moved from `SL(2,3)` monodromy to the
+metaplectic/Weil side: the Gauss sums `G(Q_t)` are matrix coefficients
+of the Weil representation of `Sp` over `F_3`, and the Witt signs
+`ε_t` are its quadratic characters.  Determining the sign pattern
+`ε_t` combinatorially (e.g. via the domain topology of `t`) is the
+concrete open task on this route.
+
 ## 9. Conjecture and proof program
 
 **Conjecture A (Affine Nine).**  Every simple triangulation of the
