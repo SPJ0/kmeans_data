@@ -188,10 +188,11 @@ the weight, and empirically it does (see below).
 
 ## 7. Experimental record (code in src/, experiments/)
 
-* **Exhaustive**: all simple sphere triangulations with `n ≤ 13`
-  (1 + 1 + 2 + 5 + 14 + 50 + 233 + 1249 + 7595 + 49566 isomorphism
-  classes — 58,715 in total, counts matching the known enumeration, so
-  coverage is complete) admit affine representations.  Max diagonal chromatic number over
+* **Exhaustive**: all simple sphere triangulations with `n ≤ 14`
+  (1 + 1 + 2 + 5 + 14 + 50 + 233 + 1249 + 7595 + 49566 + 339722
+  isomorphism classes — 398,437 in total, counts matching the known
+  enumeration at every order, so coverage is complete) admit affine
+  representations.  Max diagonal chromatic number over
   `n ≤ 11` (exact): 9, attained from `n = 9` on — consistent with the
   Nine Conjecture and with 9 being necessary.
 * **Every random/structured instance tested admits an affine
