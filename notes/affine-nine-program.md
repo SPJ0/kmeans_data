@@ -387,10 +387,45 @@ exactly — the phases conspire against the positive leading term, as
 they must since `F ≢ 0 mod 3` forbids pure representations) and
 bipyramid(3) (`N_1 = 648` both ways, exact).
 
-The same expansion applies to the fold-allowing count (the indicator
-of `{1, 2, fold}` produces a few character terms per face instead of
-one), giving an exact formula for the number of affine representations
-as a finite lattice sum of Gauss sums.  **The Nine Conjecture is
+**Theorem 8 (all Gauss sums positive; combinatorial counting
+formula).**  *Every antisymmetric matrix of rank `2r` over `F_3` is
+congruent to `r` standard symplectic blocks (symplectic normal form),
+congruence of `C_t` transports to equivalence of `Q_t = C_t ⊗ J`, and
+the basic block `J ⊗ J` has Gauss sum
+`Σ ω^{uv - wz} = 3 · 3 = +9`.  Hence for every weighting `t`:*
+
+    G(Q_t) = 3^{2n - rank C_t}  > 0 ,
+
+*and, writing `a_j(r) = #{t : Σt ≡ j (mod 3), rank C_t = 2r}` (note
+`a_1 = a_2` via `t ↔ -t`):*
+
+    N_1(T) / 81  =  Σ_r 9^{-r} · ( a_0(r) - a_1(r) ) .
+
+Verified exactly: tetrahedron (0), bipyramid(3) (648), octahedron (0),
+with every individual Gauss sum checked real positive on the brute-force
+cases.  The count of pure representations is thus a *rank-mass
+correlation inequality* over the lattice of `F_3` face-weightings — no
+signs, no phases beyond the mass classes.
+
+**Corollary (the global obstruction, one line).**  The shift
+`t -> t + 1` fixes `C_t` (differences see no constants) and shifts the
+mass by `F`.  If `F ≢ 0 (mod 3)` this permutes the three mass classes
+at every fixed rank, so `a_0(r) = a_1(r) = a_2(r)` for all `r` and
+`N_1 = 0` — Proposition 2's obstruction, rederived from a symmetry of
+the formula.
+
+**Toward the full count.**  Validity of a general (fold-allowing)
+representation is *exactly*: `z(e) ≠ 0` on every edge, plus the
+sign-compatibility (A2) on every dual edge (Section 8's
+classification).  Both admit character/inclusion-exclusion expansions:
+(A2) contributes charges `c` on dual edges whose face-sums produce
+weightings `t = ∂c` in the image of the dual boundary operator, and
+the nonzero-edge conditions contract edge subsets, replacing `T` by
+quotient multigraphs with the same `C ⊗ J` structure.  So an exact
+lattice-sum formula for the number of affine representations — hence a
+positivity criterion equivalent to the Nine Conjecture — is
+mechanically derivable in this calculus; carrying it out cleanly is
+the next task on this route.  **The Nine Conjecture is
 thereby equivalent to the positivity of an explicit
 Potts-with-phases partition function** — a statement in the territory
 of Weil representations and theta-like sums rather than graph
