@@ -137,3 +137,14 @@ Next structural rungs (queued): mixed-coset supports with cancellation
 constraints; D4-tower with non-C^2 intermediate surface (Trushin
 contracted-divisor constraints); DC_1 (Weyl) coset-collision analog —
 noncommutativity may break the 2D rigidity that kills the classical case.
+
+### Positive control: pipeline certified
+
+The 3D coset-collision system at the exact Alpöge shape (d=3, caps (7,6,4),
+cosets (1,-1,1)) provably contains the Alpöge point: all monomials
+admissible, det J = -2, collision equations vanish, saturation witnesses
+exist (jc3_control.py + direct substitution). The construction encoding
+therefore finds counterexamples when they exist — the 21 above-Moh EMPTY
+certificates in 2D are genuine exclusions, not encoding artifacts.
+(msolve itself struggles with the positive-dimensional moduli ideal; the
+point-substitution certificate replaces it rigorously.)
