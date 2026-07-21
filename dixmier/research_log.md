@@ -98,3 +98,14 @@ is excluded exactly — either outcome is information.
 
   (all fleets resume from existing cell_*.out certificates), then re-arm
   the anomaly monitor + heartbeat cron.
+
+### Above-the-Moh-wall exclusions (targeted construction shots, local Mac)
+
+- CONSTRUCT d=56 (112,168) coset ±1, collision dx: **EMPTY** (376 vars,
+  696 eqs, minutes). First exclusion beating Moh's degree-100 wall: the
+  exact Alpöge coset shape at minimal legal size admits no non-injective
+  Keller pair — not even a second common zero of (p,q) (both vanish at 0
+  automatically in this ansatz, and a second common zero v gives the
+  collision f(v) = f(0) = (0,0) outright).
+- Rungs d=10 (20,30), d=24 (48,72): EMPTY (Moh-consistent, plumbing+timing).
+- In flight: dy variant; cosets ±3, ±5; d = 51, 52, 55, 57; corner (3,4).

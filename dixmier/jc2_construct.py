@@ -35,9 +35,9 @@ def coset_element(name, degmax, d, coset):
     return expr, syms
 
 
-def build(d, degP, degQ):
-    P, ps = coset_element('p', degP, d, +1)
-    Q, qs = coset_element('q', degQ, d, -1)
+def build(d, degP, degQ, a=1):
+    P, ps = coset_element('p', degP, d, +a)
+    Q, qs = coset_element('q', degQ, d, -a)
     jac = sp.diff(P, x)*sp.diff(Q, y) - sp.diff(P, y)*sp.diff(Q, x)
     eqs = list(sp.Poly(sp.expand(jac - 1), x, y).coeffs())
     x1, y1, x2, y2, T0, T1, T2 = sp.symbols('x1 y1 x2 y2 T0 T1 T2')
@@ -49,12 +49,18 @@ def build(d, degP, degQ):
     eqs.append(sp.expand(T0*(x1 - x2) - 1) if COLL == 'dx'
                else sp.expand(T0*(y1 - y2) - 1))
     # corner saturation: leading coset coefficients nonzero
-    wp = max(w for w in range(-degP, degP + 1) if (w - 1) % d == 0)
-    wq = min(w for w in range(-degQ, degQ + 1) if (w + 1) % d == 0)
+    wp = max(w for w in range(-degP, degP + 1) if (w - a) % d == 0)
+    wq = min(w for w in range(-degQ, degQ + 1) if (w + a) % d == 0)
     eqs.append(sp.Symbol(f'p_{wp}_0')*T1 - 1)
     eqs.append(sp.Symbol(f'q_{wq}_0')*T2 - 1)
     vars_ = ps + qs + [x1, y1, x2, y2, T0, T1, T2]
     return eqs, vars_
+
+
+def corner_weights(d, degP, degQ, a=1):
+    wp = max(w for w in range(-degP, degP + 1) if (w - a) % d == 0)
+    wq = min(w for w in range(-degQ, degQ + 1) if (w + a) % d == 0)
+    return wp, wq
 
 
 COLL = 'dx'
@@ -64,8 +70,9 @@ def main():
     global COLL
     d, degP, degQ = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3])
     COLL = sys.argv[4] if len(sys.argv) > 4 else 'dx'
-    tag = f'CONSTRUCT_d{d}_{degP}_{degQ}_{COLL}'
-    eqs, vars_ = build(d, degP, degQ)
+    a = int(sys.argv[5]) if len(sys.argv) > 5 else 1
+    tag = f'CONSTRUCT_d{d}_{degP}_{degQ}_{COLL}_a{a}'
+    eqs, vars_ = build(d, degP, degQ, a)
     print(f'{tag}: {len(vars_)} vars, {len(eqs)} eqs', flush=True)
     ms = ','.join(str(v) for v in vars_) + '\n0\n' + ',\n'.join(
         str(sp.expand(e)).replace('**', '^').replace(' ', '')
