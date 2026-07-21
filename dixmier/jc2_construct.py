@@ -19,25 +19,28 @@ import sympy as sp
 x, y = sp.symbols('x y')
 
 
+GRADE = (1, -1)  # (alpha, beta): weight of x^i y^j is alpha*i + beta*j
+
+
 def coset_element(name, degmax, d, coset):
+    al, be = GRADE
     syms, expr = [], sp.Integer(0)
-    for w in range(-degmax, degmax + 1):
-        if (w - coset) % d != 0:
-            continue
-        db = (degmax - abs(w)) // 2
-        if db < 0:
-            continue
-        vw = x**w if w >= 0 else y**(-w)
-        for j in range(db + 1):
-            c = sp.Symbol(f'{name}_{w}_{j}')
+    for i in range(degmax + 1):
+        for j in range(degmax + 1 - i):
+            if (al*i + be*j - coset) % d != 0:
+                continue
+            c = sp.Symbol(f'{name}_{i}_{j}')
             syms.append(c)
-            expr += c * (x*y)**j * vw
+            expr += c * x**i * y**j
     return expr, syms
 
 
 def build(d, degP, degQ, a=1):
-    P, ps = coset_element('p', degP, d, +a)
-    Q, qs = coset_element('q', degQ, d, -a)
+    al, be = GRADE
+    # jac(coset a, coset b) lands in coset a + b - (al+be); jac = 1 needs
+    # that to be 0 mod d, so q's coset is (al+be) - a.
+    P, ps = coset_element('p', degP, d, a)
+    Q, qs = coset_element('q', degQ, d, (al + be) - a)
     jac = sp.diff(P, x)*sp.diff(Q, y) - sp.diff(P, y)*sp.diff(Q, x)
     eqs = list(sp.Poly(sp.expand(jac - 1), x, y).coeffs())
     x1, y1, x2, y2, T0, T1, T2 = sp.symbols('x1 y1 x2 y2 T0 T1 T2')
@@ -48,30 +51,31 @@ def build(d, degP, degQ, a=1):
         eqs.append(sp.expand(E.subs({x: x1, y: y1}) - E.subs({x: x2, y: y2})))
     eqs.append(sp.expand(T0*(x1 - x2) - 1) if COLL == 'dx'
                else sp.expand(T0*(y1 - y2) - 1))
-    # corner saturation: leading coset coefficients nonzero
-    wp = max(w for w in range(-degP, degP + 1) if (w - a) % d == 0)
-    wq = min(w for w in range(-degQ, degQ + 1) if (w + a) % d == 0)
-    eqs.append(sp.Symbol(f'p_{wp}_0')*T1 - 1)
-    eqs.append(sp.Symbol(f'q_{wq}_0')*T2 - 1)
+    # corner saturation: pin opposite Newton-polygon corners (max-x monomial
+    # of p, max-y monomial of q)
+    def corner(syms_list, key):
+        pairs = [tuple(int(t) for t in str(s).split('_')[1:]) for s in syms_list]
+        return max(pairs, key=key)
+    ci, cj = corner(ps, lambda ij: (ij[0], -ij[1]))
+    di, dj = corner(qs, lambda ij: (ij[1], -ij[0]))
+    eqs.append(sp.Symbol(f'p_{ci}_{cj}')*T1 - 1)
+    eqs.append(sp.Symbol(f'q_{di}_{dj}')*T2 - 1)
     vars_ = ps + qs + [x1, y1, x2, y2, T0, T1, T2]
     return eqs, vars_
-
-
-def corner_weights(d, degP, degQ, a=1):
-    wp = max(w for w in range(-degP, degP + 1) if (w - a) % d == 0)
-    wq = min(w for w in range(-degQ, degQ + 1) if (w + a) % d == 0)
-    return wp, wq
 
 
 COLL = 'dx'
 
 
 def main():
-    global COLL
+    global COLL, GRADE
     d, degP, degQ = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3])
     COLL = sys.argv[4] if len(sys.argv) > 4 else 'dx'
     a = int(sys.argv[5]) if len(sys.argv) > 5 else 1
-    tag = f'CONSTRUCT_d{d}_{degP}_{degQ}_{COLL}_a{a}'
+    if len(sys.argv) > 7:
+        GRADE = (int(sys.argv[6]), int(sys.argv[7]))
+    g = f'g{GRADE[0]}_{GRADE[1]}'.replace('-', 'm')
+    tag = f'CONSTRUCT_d{d}_{degP}_{degQ}_{COLL}_a{a}_{g}'
     eqs, vars_ = build(d, degP, degQ, a)
     print(f'{tag}: {len(vars_)} vars, {len(eqs)} eqs', flush=True)
     ms = ','.join(str(v) for v in vars_) + '\n0\n' + ',\n'.join(
