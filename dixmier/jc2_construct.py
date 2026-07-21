@@ -23,11 +23,13 @@ GRADE = (1, -1)  # (alpha, beta): weight of x^i y^j is alpha*i + beta*j
 
 
 def coset_element(name, degmax, d, coset):
+    """coset may be an int or a list of ints (mixed-coset support)."""
+    cosets = coset if isinstance(coset, (list, tuple)) else [coset]
     al, be = GRADE
     syms, expr = [], sp.Integer(0)
     for i in range(degmax + 1):
         for j in range(degmax + 1 - i):
-            if (al*i + be*j - coset) % d != 0:
+            if not any((al*i + be*j - cs) % d == 0 for cs in cosets):
                 continue
             c = sp.Symbol(f'{name}_{i}_{j}')
             syms.append(c)
@@ -38,9 +40,13 @@ def coset_element(name, degmax, d, coset):
 def build(d, degP, degQ, a=1):
     al, be = GRADE
     # jac(coset a, coset b) lands in coset a + b - (al+be); jac = 1 needs
-    # that to be 0 mod d, so q's coset is (al+be) - a.
-    P, ps = coset_element('p', degP, d, a)
-    Q, qs = coset_element('q', degQ, d, (al + be) - a)
+    # 0 mod d to be reachable, so q's cosets mirror p's: (al+be) - a.
+    # With mixed support the off-zero jac cosets contribute cancellation
+    # equations automatically (their coefficients are set to 0 by
+    # Poly(jac - 1).coeffs()).
+    alist = a if isinstance(a, (list, tuple)) else [a]
+    P, ps = coset_element('p', degP, d, alist)
+    Q, qs = coset_element('q', degQ, d, [(al + be) - t for t in alist])
     jac = sp.diff(P, x)*sp.diff(Q, y) - sp.diff(P, y)*sp.diff(Q, x)
     eqs = list(sp.Poly(sp.expand(jac - 1), x, y).coeffs())
     x1, y1, x2, y2, T0, T1, T2 = sp.symbols('x1 y1 x2 y2 T0 T1 T2')
@@ -71,11 +77,14 @@ def main():
     global COLL, GRADE
     d, degP, degQ = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3])
     COLL = sys.argv[4] if len(sys.argv) > 4 else 'dx'
-    a = int(sys.argv[5]) if len(sys.argv) > 5 else 1
+    a = [int(t) for t in sys.argv[5].split(',')] if len(sys.argv) > 5 else [1]
+    if len(a) == 1:
+        a = a[0]
     if len(sys.argv) > 7:
         GRADE = (int(sys.argv[6]), int(sys.argv[7]))
     g = f'g{GRADE[0]}_{GRADE[1]}'.replace('-', 'm')
-    tag = f'CONSTRUCT_d{d}_{degP}_{degQ}_{COLL}_a{a}_{g}'
+    atag = str(a).replace('[', '').replace(']', '').replace(', ', '-')
+    tag = f'CONSTRUCT_d{d}_{degP}_{degQ}_{COLL}_a{atag}_{g}'
     eqs, vars_ = build(d, degP, degQ, a)
     print(f'{tag}: {len(vars_)} vars, {len(eqs)} eqs', flush=True)
     ms = ','.join(str(v) for v in vars_) + '\n0\n' + ',\n'.join(
