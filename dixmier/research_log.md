@@ -74,8 +74,8 @@ q in w ≡ -1 (mod d), jac(p,q) = 1, plus ONE imposed collision
 f(v) = f(v'), v != v' (saturated). Any solution = non-injective Keller map
 = JC_2 counterexample outright. Sizing forced by theory: Moh kills
 max-degree <= 100; Moskowicz kills prime multiplicity. Target shot:
-d ~ 50, bidegrees ~ (101, 150) (Alpöge pattern deg ~ 2d+1, non-dividing
-degrees, gcd >= 16 respected). Coset support cuts the system to a few
+d = 56, bidegrees (112, 168) = 56·(2,3) — GGV needs gcd >= 16, Moh needs
+deg > 100, Moskowicz needs composite k. Coset support cuts the system to a few
 hundred coefficients — one msolve job (jc2_construct.py), not a sweep.
 Dichotomy: NONEMPTY = explicit counterexample; EMPTY = that ansatz shape
 is excluded exactly — either outcome is information.
