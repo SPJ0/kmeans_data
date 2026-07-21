@@ -249,6 +249,71 @@ and cancellations between *three* level-0 channels are combinatorially possible;
 (c) positive-characteristic-inspired lifts (Frobenius-like kernels have no char-0
 analogue on 𝔾ₐ², but twisted forms over function fields were not examined).
 
+## 7. Phase 2: the live candidates — Borisov's frameworks beyond Moh's barrier
+
+Following the specification sheet, the second phase attacked the only known *positive*
+program for 2D: Borisov's frameworks (Electron. J. Combin. 27 (2020) #P3.54) — explicit
+combinatorial data (dual graphs at infinity of source/target compactifications, Picard
+pushforward/pullback, ramification bookkeeping) satisfying **all** known numerical
+obstructions, such that "each framework corresponds to a large system of equations,
+whose solution would lead to a Keller map."
+
+**The landscape, extracted from the paper:**
+
+- **First framework:** geometric degree 16, polynomial degrees (99,66) — the *last
+  troublesome case* of Moh's degree-≤100 theorem. Borisov's Remark 3 documents that
+  Moh's published discard of this case is a sketch; Yansong Xu claimed a gap (his patch
+  had its own acknowledged error); Horruitiner's Master's thesis and Borisov's own Maple
+  computation both conclude "no map" — but "we currently do not have a simple reason",
+  and Borisov explicitly distrusts single-source bookkeeping at this scale.
+- **Isotope family (k = 2..6):** same target graph, degree pairs
+  **(99,66), (135,90), (171,114), (207,138), (243,162)**. Everything with k ≥ 3 lies
+  beyond Moh's theorem and is **completely open**. The k=3 framework, degrees (135,90),
+  geometric degree 16, is the minimal live candidate for a 2D counterexample.
+- **Second framework:** geometric degree 28, degrees (435,290) — open.
+- **Three-dessin framework:** no type-4 curves — open.
+
+**Borisov's near-miss and the defect connection.** For the first framework Borisov
+exhibits an explicit generically-16:1 polynomial map built from a degree-16 Belyi map
+(`y₁ = x₁³x₂⁸·p(w̃)`, `y₂ = x₁²x₂⁵(x₁x₂³−1)·r(w̃)`, `w̃ = (x₁x₂³−1)³/x₂`) whose
+Jacobian is `const·x₁⁴x₂¹²` — a pure **monomial defect**, the exact 2D analogue of the
+compressed map G of §2 (defect `−2γ²`). He remarks it cannot be repaired "even by
+introducing additional variables" — written in 2020. The 2026 counterexample shows
+defect absorption by additional variables *is* possible in dimension 3; whether Borisov's
+16:1 near-miss defect `x₁⁴x₂¹²` is absorbable into a 3D/4D Keller map is a new question
+this connection raises (it would give counterexamples of a second, Belyi-powered type).
+
+**The Belyi engines, constructed.** The frameworks are powered by Belyi maps on the two
+forked boundary curves. The isotope family needs:
+
+- on the (−5)-curve (shared by all isotopes): degree 16, profile
+  `(0:[2⁸], ∞:[3⁵,1], 1:[13,1³])`. Writing it as `φ = c·p²/r³` (p monic deg 8, r monic
+  deg 5), the entire ramification condition collapses to the single bilinear identity
+  **`2p′r − 3pr′ = u¹²`** — 12 equations; p is triangularly determined by r, leaving 4
+  conditions on 4 coefficients of r (computation running; Newton + Groebner).
+- on the (−2)-curve of the k=3 isotope: degree 13, profile
+  `(∞:[13], 0:[3,3,3,1,1,1,1], 1:[7,1⁶])`. **Constructed explicitly**
+  (`belyi_k3.py`): writing `g = A³B` with the 7-fold point at 0 forces
+  `g′ = 13t⁶A²`, `g(0)=1`, and the single condition `A³ | g` gives 9 equations in the 3
+  coefficients of A. The Groebner basis is triangular over a degree-65 polynomial that
+  is a **quintic in a₂¹³** (the 13th roots of unity are the residual scaling); the
+  quintic is irreducible over ℚ — the dessin's moduli field has degree 5, matching the
+  count of admissible plane trees. A real solution was extracted to 40 digits and the
+  full profile verified (7-fold root exact, A, B, D squarefree and coprime).
+
+**What remains for a full realization of the k=3 candidate** (the concrete route to a 2D
+counterexample, after Borisov's method for k=2): write `y₁, y₂` as Laurent polynomials in
+the edge coordinates `(v, w)` of the source graph with Newton polygon fixed by the
+framework (vertices at (0,0), (3,0), (36,99)-type data, ~thousands of coefficients),
+impose the pole orders of the framework at every boundary curve, seed the leading
+behavior along the forked curves with the two Belyi maps above, and solve the resulting
+system — linear in the y-coefficients, nonlinear in a handful of moduli parameters e_i.
+For k=2 Borisov reduced hundreds of equations to "a dozen or so coefficients" before
+finding an incompatibility; there is no computation on record for k ≥ 3, and the k=3
+system is now partially seeded by the explicit Belyi data above. This is where the
+2D question currently lives: either the k=3 cascade closes (automorphism-style collapse,
+extending the pattern of §3), or its solution is the first 2D Keller map.
+
 ## Reproducing
 
 ```
