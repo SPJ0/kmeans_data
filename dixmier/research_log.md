@@ -30,6 +30,21 @@ Consequences for a hypothetical JC_2 counterexample f = (p,q):
   generators for each, and pose "Keller pair inside the invariant field"
   as finite coefficient systems per degree box — same msolve pipeline.
 
+### No-Galois lemma (sharpens the k=4 case split)
+
+A Keller map is everywhere étale (jac const != 0). If the generic-fiber
+extension were Galois with every deck map regular on C^2, a deck map would
+be a finite-order automorphism of C^2, hence linearizable
+(Jung–van der Kulk => finite subgroups of Aut(C^2) conjugate into GL_2),
+hence with a fixed point — contradicting freeness on the étale cover.
+Classical corollary of the same circle: a PROPER Keller map is a trivial
+cover of C^2 (simply connected), i.e. an automorphism. So any counterexample
+is non-proper, and its deck maps (when Galois-partial structure exists) are
+only partially defined — the Z/4 and V4 closures at k = 4 are ruled out in
+the finite/regular regime; the live quartic closures are D4, A4, S4, with
+the D4 case still offering a degree-2 tower step for the contracted-divisor
+squeeze.
+
 ### Local (box-independent) work
 
 - invariants.py D=12 sweep of u∘F^k = a·u + b running on the Mac
