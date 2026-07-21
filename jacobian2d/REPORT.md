@@ -287,10 +287,27 @@ this connection raises (it would give counterexamples of a second, Belyi-powered
 forked boundary curves. The isotope family needs:
 
 - on the (−5)-curve (shared by all isotopes): degree 16, profile
-  `(0:[2⁸], ∞:[3⁵,1], 1:[13,1³])`. Writing it as `φ = c·p²/r³` (p monic deg 8, r monic
-  deg 5), the entire ramification condition collapses to the single bilinear identity
-  **`2p′r − 3pr′ = u¹²`** — 12 equations; p is triangularly determined by r, leaving 4
-  conditions on 4 coefficients of r (computation running; Newton + Groebner).
+  `(0:[2⁸], ∞:[3⁵,1], 1:[13,1³])`. **Constructed exactly over ℚ(√−3)**
+  (`belyi16_exact.py`), via a chain of identities that unifies everything in this
+  report:
+  * For the near-miss ansatz `y₁ = x₁³x₂⁸p(W̃)`, `y₂ = x₁²x₂⁵(x₁x₂³−1)r(W̃)` with
+    *arbitrary* p (deg 8), r (deg 5): **det J = x₁⁴x₂¹²·Φ(W̃)** where
+    `Φ = pr + W(3pr′ − 2p′r)` — the graded Φ-equation of §3.1, in the resonant
+    sector where the leading obstruction `1 + 3·deg r − 2·deg p = 0` vanishes. The
+    monomial defect is exactly the graded prefactor of the §3.1 formula: near-misses
+    are resonant graded pairs, true Keller would need prefactor 1 (the dead sectors).
+  * `Φ = c` (constant) ⟺ `T(w) := w·r³/p²` satisfies `T′ = c·r²/p³` ⟺ T is the
+    degree-16 Belyi map: zeros give [3⁵,1], poles [2⁸], and `T−1 ~ −(c/13)w⁻¹³` at
+    ∞ gives the 13-point, with `w·r³ − p² = cubic` supplying the three simple points.
+  * Solving `Φ = c` (bilinear; r eliminates linearly; Groebner on 7 conditions in p):
+    exactly one non-degenerate component — the other is the degenerate family
+    `p = w²q³, r = wq², Φ ≡ 0` — giving a **unique solution up to the choice of
+    √−3**: `p₆ = 12151/28812 + (81/4802)√−3` etc. (full closed form in
+    `belyi16_exact.py`). The two Galois-conjugate solutions match the combinatorial
+    dessin count **156/78 = 2** (`belyi_deg16.py`).
+  * With this exact pair, **Borisov's near-miss is reconstructed and verified
+    exactly**: a polynomial map of degrees (99,66) with `det J = c·x₁⁴x₂¹²`,
+    c ≠ 0 ∈ ℚ(√−3) — the closest known object to a 2D Keller map, now in closed form.
 - on the (−2)-curve of the k=3 isotope: degree 13, profile
   `(∞:[13], 0:[3,3,3,1,1,1,1], 1:[7,1⁶])`. **Constructed explicitly**
   (`belyi_k3.py`): writing `g = A³B` with the 7-fold point at 0 forces
@@ -331,6 +348,9 @@ python3 verify_3d_counterexample.py   # the announced map: Keller + 3 preimages
 python3 reduction_principle.py        # det J_F = det J_G / γ², compressed map
 python3 family_3d.py                  # derived family + NEW (8,7,5) instance
 python3 rigidity_2d.py                # Theorem A + two-piece sector rigidity
+python3 belyi_k3.py                   # k=3 isotope deg-13 Belyi (live candidate engine)
+python3 belyi_deg16.py                # deg-16 dessin existence (combinatorial)
+python3 belyi16_exact.py              # EXACT deg-16 Belyi + (99,66) near-miss over Q(sqrt(-3))
 ```
 
 ## Sources
