@@ -301,6 +301,16 @@ forked boundary curves. The isotope family needs:
   count of admissible plane trees. A real solution was extracted to 40 digits and the
   full profile verified (7-fold root exact, A, B, D squarefree and coprime).
 
+**Non-absorbability of the near-miss (checked).** Under the torus weights (3,−1) the
+invariant of Borisov's near-miss is `v = x₁x₂³` and the defect is `c·v⁴`; the
+compression-absorption patterns of §2 (generalized to weights `(a,b,e)`) all require
+`γ^{a/e} | y₁`, `γ^{b/e} | y₂` for the defect root γ, and every admissible pattern fails
+on the monomial exponents `(x₁³x₂⁸, x₁²x₂⁵)`. So the near-miss is *not* the compression
+of an equivariant 3D Keller map — an independent confirmation of Borisov's remark, and a
+sharper one: under the (3,−1) grading the near-miss spreads over ~9 graded pieces. The
+frameworks thus live exactly beyond the 2–3-piece sectors closed in §3, at a graded
+depth where only Borisov's k=2 machine computation has ever closed the cascade.
+
 **What remains for a full realization of the k=3 candidate** (the concrete route to a 2D
 counterexample, after Borisov's method for k=2): write `y₁, y₂` as Laurent polynomials in
 the edge coordinates `(v, w)` of the source graph with Newton polygon fixed by the
