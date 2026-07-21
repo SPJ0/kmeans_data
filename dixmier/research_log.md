@@ -109,3 +109,15 @@ is excluded exactly — either outcome is information.
   collision f(v) = f(0) = (0,0) outright).
 - Rungs d=10 (20,30), d=24 (48,72): EMPTY (Moh-consistent, plumbing+timing).
 - In flight: dy variant; cosets ±3, ±5; d = 51, 52, 55, 57; corner (3,4).
+
+### Parity correction on the shape batch (important)
+
+weight ≡ degree (mod 2), so even d + odd coset forces ODD effective degrees:
+the d=52 and d=56 shots had effective degree pairs (103,155)/(111,167) with
+gcd 1 — inside the GGV wall, hence trivially EMPTY. Genuine above-Moh
+exclusions so far: pure-coset ansatz at d=51 (102,153), d=55 (110,165),
+d=57 (114,171), all corners/cosets as run. Corrected legal recipe: odd d
+(any coset), or even d with odd-odd degrees sharing odd gcd >= 17 — e.g.
+d=56/34 at (119,153), gcd 17. Batch 2 covers: d=56 (119,153) dx/dy,
+d=34 (119,153), d=33 (132,165), d=39 (117,156), d=51 corner (3,4)
+(153,204), d=55 coset 2 (110,154).
