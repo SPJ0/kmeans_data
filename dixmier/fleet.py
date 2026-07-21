@@ -11,6 +11,7 @@ import sympy as sp
 from cascade2 import cell_system
 
 NCORES = int(sys.argv[1]) if len(sys.argv) > 1 else os.cpu_count()
+B = int(sys.argv[2]) if len(sys.argv) > 2 else 16  # layer: bidegrees (2B, 3B)
 
 def to_msolve(eqs, vars_):
     lines = [','.join(str(v) for v in vars_), '0']
@@ -49,14 +50,14 @@ def run_cell(job):
 
 def main():
     jobs = []
-    # B=16 layer: all sublattice steps, both Bernstein orientations, both corners.
-    for d in range(2, 17):
-        for (a, b) in ((32, 48), (48, 32)):
+    # layer B: all sublattice steps, both Bernstein orientations, both corners.
+    for d in range(2, B + 1):
+        for (a, b) in ((2*B, 3*B), (3*B, 2*B)):
             for corner in ('extreme', 'w0'):
                 jobs.append((d, a, b, corner))
     # smallest systems first (largest d): fast wins early
     jobs.sort(key=lambda j: (-j[0], j[1]))
-    print(f'{len(jobs)} cells, {NCORES} workers', flush=True)
+    print(f'{len(jobs)} cells (layer B={B}), {NCORES} workers', flush=True)
     with mp.Pool(min(NCORES, len(jobs))) as pool:
         with open('results.log', 'a') as f:
             for line in pool.imap_unordered(run_cell, jobs):
