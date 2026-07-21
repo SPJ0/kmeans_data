@@ -70,3 +70,38 @@ print("B =", [sp.N(c, 20) for c in B.all_coeffs()])
 print()
 print("This is the (-2)-curve Belyi map of the k=3 isotope framework,")
 print("degrees (135, 90) -- the smallest open candidate for a 2D Keller map.")
+
+# Independent cross-check: count dessins combinatorially.  Fix the 13-cycle
+# sigma_inf, enumerate sigma1 of type [7,1^6] (1716 supports x 720 cycles) and
+# count those with sigma0 = sigma_inf o sigma1^{-1} of type [3,3,3,1,1,1,1].
+# Result: 65 labeled solutions / 13 (centralizer of the 13-cycle) = 5 dessins,
+# matching the degree-5 irreducible quintic in a2^13 exactly.
+from itertools import combinations, permutations
+
+n = 13
+sinf = [(i+1) % n for i in range(n)]
+
+def cycle_type(perm):
+    seen = [False]*n; ct = []
+    for i in range(n):
+        if not seen[i]:
+            l, j = 0, i
+            while not seen[j]:
+                seen[j] = True; j = perm[j]; l += 1
+            ct.append(l)
+    return sorted(ct, reverse=True)
+
+count = 0
+for supp in combinations(range(n), 7):
+    for arr in permutations(supp[1:]):
+        s1 = list(range(n))
+        cyc = (supp[0],) + arr
+        for i in range(7):
+            s1[cyc[i]] = cyc[(i+1) % 7]
+        s0 = [0]*n
+        for x in range(n):
+            s0[s1[x]] = sinf[x]
+        if cycle_type(s0) == [3, 3, 3, 1, 1, 1, 1]:
+            count += 1
+assert count == 65 and count // 13 == 5
+print("combinatorial cross-check: 5 dessins = degree of the quintic  OK")
