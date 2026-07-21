@@ -1,0 +1,8 @@
+#Reduced Groebner basis data
+#---
+#field characteristic: 0
+#variable order:       u1, u2, u3
+#monomial order:       graded reverse lexicographical
+#length of basis:      1 element
+#---
+[u2^3*u3+27*u1^2*u3^2-18*u1*u2*u3-u2^2+16*u1]:

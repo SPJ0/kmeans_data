@@ -52,6 +52,34 @@ squeeze.
 - To scrutinize when time permits: the Moskowicz proof (it is load-bearing
   for abandoning k=2,3 searches; independent verification prudent).
 
+### The Alpöge mechanism, reverse-engineered (first-principles session)
+
+- Jelonek non-properness set computed exactly (jelonek2.py):
+  **S_F : u2^3 u3 + 27 u1^2 u3^2 - 18 u1 u2 u3 - u2^2 + 16 u1 = 0**,
+  irreducible quartic, Z/3-semi-invariant, escape only through the
+  x-direction at infinity. Honest fibers stay 3 points even on S_F (the
+  escaping 2-parameter family is *extra*, concentrated over the quartic).
+- Escape asymptotics (verified on the u1=0 branch, which gives the
+  u2*u3 = 1 slice): x -> inf with xy -> a and x^2 z -> 2-3a bounded —
+  i.e. torus-invariant coordinates bounded, weight-1 coordinate escaping.
+- Structural key: every component of F is supported in a SINGLE COSET of
+  3Z in the torus-weight lattice (F1 ≡ 1, F2 ≡ -1, F3 ≡ 1 mod 3).
+  gcd(coset, d) = 1 explains why no proper-subalgebra certificate applies:
+  the map is honestly 3-to-1, not a graded-subalgebra artifact.
+
+### 2D transplant: the coset construction ansatz
+
+Grade C[x,y] by w = deg_x - deg_y. Ansatz: p supported in w ≡ +1 (mod d),
+q in w ≡ -1 (mod d), jac(p,q) = 1, plus ONE imposed collision
+f(v) = f(v'), v != v' (saturated). Any solution = non-injective Keller map
+= JC_2 counterexample outright. Sizing forced by theory: Moh kills
+max-degree <= 100; Moskowicz kills prime multiplicity. Target shot:
+d ~ 50, bidegrees ~ (101, 150) (Alpöge pattern deg ~ 2d+1, non-dividing
+degrees, gcd >= 16 respected). Coset support cuts the system to a few
+hundred coefficients — one msolve job (jc2_construct.py), not a sweep.
+Dichotomy: NONEMPTY = explicit counterexample; EMPTY = that ansatz shape
+is excluded exactly — either outcome is information.
+
 ### Status of certified layers (all EMPTY, certificates in repo)
 
 - DC_1  B=16: 56/60 (missing: the four d=2 giants; msolve pending box).
