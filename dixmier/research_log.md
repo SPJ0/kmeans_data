@@ -121,3 +121,19 @@ d=57 (114,171), all corners/cosets as run. Corrected legal recipe: odd d
 d=56/34 at (119,153), gcd 17. Batch 2 covers: d=56 (119,153) dx/dy,
 d=34 (119,153), d=33 (132,165), d=39 (117,156), d=51 corner (3,4)
 (153,204), d=55 coset 2 (110,154).
+
+### Batches 2-3 final: 21/21 legal shots EMPTY
+
+Non-symplectic gradings (2,-1), (3,-1), (3,-2) at d in {51,52,55,56} and
+the full parity-legal symplectic neighborhood: every targeted construction
+shot certified EMPTY. The coset-graded escape mechanism does not transplant
+to 2D at any minimal legal configuration, across three grading families.
+(One artifact: the (i,j)-ordered refactor makes msolve dramatically slower
+on symplectic cells than the weight-line-ordered formulation — order
+coefficient variables by weight-line in future builders. The affected
+regression cell was already certified EMPTY in the theta-formulation.)
+
+Next structural rungs (queued): mixed-coset supports with cancellation
+constraints; D4-tower with non-C^2 intermediate surface (Trushin
+contracted-divisor constraints); DC_1 (Weyl) coset-collision analog —
+noncommutativity may break the 2D rigidity that kills the classical case.
