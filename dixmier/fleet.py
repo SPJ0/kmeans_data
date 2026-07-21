@@ -33,9 +33,16 @@ def run_cell(job):
         r = subprocess.run(['msolve', '-g', '2', '-t', '2', '-f', fin, '-o', fout],
                            capture_output=True, text=True, timeout=48*3600)
         out = open(fout).read() if os.path.exists(fout) else ''
-        compact = out.replace('\n', '').replace(' ', '')
-        empty = compact.rstrip(':,;') in ('[1]', '[1]:') or compact.startswith('[1]')
-        verdict = 'EMPTY' if empty else 'NONEMPTY?!'
+        # msolve prepends '#' comment headers and may split the basis across
+        # lines ('[1\n]:'), so strip comments before flattening.
+        body = ''.join(l.strip() for l in out.splitlines()
+                       if not l.lstrip().startswith('#')).replace(' ', '')
+        if not body:
+            verdict = 'FAILED_NO_OUTPUT'
+        elif body.rstrip(':,;') == '[1]':
+            verdict = 'EMPTY'
+        else:
+            verdict = 'NONEMPTY?!'
         return f'{tag}: {verdict} [{len(vars_)} vars, {len(eqs)} eqs, {time.time()-t0:.0f}s]'
     except Exception as ex:
         return f'{tag}: FAILED {type(ex).__name__}: {str(ex)[:120]} [{time.time()-t0:.0f}s]'
