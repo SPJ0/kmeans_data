@@ -22,7 +22,7 @@ import sympy as sp
 x, y = sp.symbols('x y')
 
 
-def cell_system(d, degP, degQ, corner='extreme'):
+def cell_system(d, degP, degQ, corner='extreme', sym=None):
     syms = []
 
     def make(name, degmax, wrange):
@@ -45,6 +45,14 @@ def cell_system(d, degP, degQ, corner='extreme'):
     jac = sp.diff(P, x)*sp.diff(Q, y) - sp.diff(P, y)*sp.diff(Q, x)
     poly = sp.Poly(sp.expand(jac - 1), x, y)
     eqs = list(poly.coeffs())
+    if sym == 'dihedral':
+        # invariance under the symplectic swap s:(x,y)->(y,-x); together with
+        # the sublattice group this is the binary dihedral group (d >= 3),
+        # whose invariant ring is a strictly smaller proper subalgebra.
+        for E in (P, Q):
+            Es = E.subs({x: y, y: -x}, simultaneous=True)
+            seqs = sp.Poly(sp.expand(Es - E), x, y).coeffs()
+            eqs.extend(e for e in seqs if e != 0)
     T1, T2 = sp.symbols('T1 T2')
     if corner == 'extreme':
         # true corner of the cell: largest weight actually present
