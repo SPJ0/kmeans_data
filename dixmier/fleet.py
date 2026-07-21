@@ -21,29 +21,34 @@ def to_msolve(eqs, vars_):
         body.append(s)
     return '\n'.join(lines) + '\n' + ',\n'.join(body) + '\n'
 
+def parse_out(fout):
+    # msolve prepends '#' comment headers and may split the basis across
+    # lines ('[1\n]:'), so strip comments before flattening.
+    if not os.path.exists(fout):
+        return None
+    out = open(fout).read()
+    body = ''.join(l.strip() for l in out.splitlines()
+                   if not l.lstrip().startswith('#')).replace(' ', '')
+    if not body:
+        return None
+    return 'EMPTY' if body.rstrip(':,;') == '[1]' else 'NONEMPTY?!'
+
+
 def run_cell(job):
     d, degP, degQ, corner = job
     tag = f'S{d}_{degP}_{degQ}_{corner}'
     t0 = time.time()
     try:
-        eqs, vars_ = cell_system(d, degP, degQ, corner)
-        ms = to_msolve(eqs, vars_)
         fin, fout = f'cell_{tag}.ms', f'cell_{tag}.out'
-        open(fin, 'w').write(ms)
+        cached = parse_out(fout)
+        if cached is not None:
+            return f'{tag}: {cached} [cached]'
+        eqs, vars_ = cell_system(d, degP, degQ, corner)
+        open(fin, 'w').write(to_msolve(eqs, vars_))
         # -g 2: reduced Groebner basis, grevlex; exact over Q
         r = subprocess.run(['msolve', '-g', '2', '-t', '2', '-f', fin, '-o', fout],
                            capture_output=True, text=True, timeout=48*3600)
-        out = open(fout).read() if os.path.exists(fout) else ''
-        # msolve prepends '#' comment headers and may split the basis across
-        # lines ('[1\n]:'), so strip comments before flattening.
-        body = ''.join(l.strip() for l in out.splitlines()
-                       if not l.lstrip().startswith('#')).replace(' ', '')
-        if not body:
-            verdict = 'FAILED_NO_OUTPUT'
-        elif body.rstrip(':,;') == '[1]':
-            verdict = 'EMPTY'
-        else:
-            verdict = 'NONEMPTY?!'
+        verdict = parse_out(fout) or 'FAILED_NO_OUTPUT'
         return f'{tag}: {verdict} [{len(vars_)} vars, {len(eqs)} eqs, {time.time()-t0:.0f}s]'
     except Exception as ex:
         return f'{tag}: FAILED {type(ex).__name__}: {str(ex)[:120]} [{time.time()-t0:.0f}s]'
@@ -58,7 +63,7 @@ def main():
     # smallest systems first (largest d): fast wins early
     jobs.sort(key=lambda j: (-j[0], j[1]))
     print(f'{len(jobs)} cells (layer B={B}), {NCORES} workers', flush=True)
-    with mp.Pool(min(NCORES, len(jobs))) as pool:
+    with mp.Pool(min(NCORES, len(jobs)), maxtasksperchild=2) as pool:
         with open('results.log', 'a') as f:
             for line in pool.imap_unordered(run_cell, jobs):
                 print(line, flush=True)

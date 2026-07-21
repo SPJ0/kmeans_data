@@ -28,26 +28,32 @@ def to_msolve(eqs, vars_):
     return '\n'.join(lines) + '\n' + ',\n'.join(body) + '\n'
 
 
+def parse_out(fout):
+    if not os.path.exists(fout):
+        return None
+    out = open(fout).read()
+    body = ''.join(l.strip() for l in out.splitlines()
+                   if not l.lstrip().startswith('#')).replace(' ', '')
+    if not body:
+        return None
+    return 'EMPTY' if body.rstrip(':,;') == '[1]' else 'NONEMPTY?!'
+
+
 def run_cell(job):
     B, d, degP, degQ, corner, sign = job
     sgn = 'p' if sign == '+' else 'm'
     tag = f'DCD_B{B}_S{d}_{degP}_{degQ}_{corner}_{sgn}'
     t0 = time.time()
     try:
-        eqs, vars_ = cell_system(d, degP, degQ, corner, sign)
         fin, fout = f'cell_{tag}.ms', f'cell_{tag}.out'
+        cached = parse_out(fout)
+        if cached is not None:
+            return f'{tag}: {cached} [cached]'
+        eqs, vars_ = cell_system(d, degP, degQ, corner, sign)
         open(fin, 'w').write(to_msolve(eqs, vars_))
         r = subprocess.run(['msolve', '-g', '2', '-t', '2', '-f', fin, '-o', fout],
                            capture_output=True, text=True, timeout=48*3600)
-        out = open(fout).read() if os.path.exists(fout) else ''
-        body = ''.join(l.strip() for l in out.splitlines()
-                       if not l.lstrip().startswith('#')).replace(' ', '')
-        if not body:
-            verdict = 'FAILED_NO_OUTPUT'
-        elif body.rstrip(':,;') == '[1]':
-            verdict = 'EMPTY'
-        else:
-            verdict = 'NONEMPTY?!'
+        verdict = parse_out(fout) or 'FAILED_NO_OUTPUT'
         return f'{tag}: {verdict} [{len(vars_)} vars, {len(eqs)} eqs, {time.time()-t0:.0f}s]'
     except Exception as ex:
         return f'{tag}: FAILED {type(ex).__name__}: {str(ex)[:120]} [{time.time()-t0:.0f}s]'
@@ -64,7 +70,8 @@ def main():
     jobs.sort(key=lambda j: (j[0], -j[1]))
     print(f'{len(jobs)} dihedral DC cells, B={BMIN}..{BMAX}, {NCORES} workers',
           flush=True)
-    with mp.Pool(min(NCORES, len(jobs))) as pool:
+    # maxtasksperchild: recycle workers to bound sympy cache growth
+    with mp.Pool(min(NCORES, len(jobs)), maxtasksperchild=2) as pool:
         with open('dc_sym_results.log', 'a') as f:
             for line in pool.imap_unordered(run_cell, jobs):
                 print(line, flush=True)
