@@ -388,6 +388,52 @@ Facts established:
   cut generic `(A,B)`-leaves ≥ 6 times while interpolating the marked μ₂-pair — sharp,
   previously unformulated targets for a construction.
 
+## 9. Iterated Keller preimages: the surface Σ, a live 𝔸² candidate at 9 sheets
+
+The sharpest new object of the campaign (`iterated_preimage.py`). The surface
+`S₁ = {B=0} = F⁻¹(plane)` carries a 3:1 étale map `(A,C)|S₁ → 𝔸²`, so **Orevkov's
+theorem forces S₁ ≇ 𝔸²**. But `H = F∘F` is a 9-sheeted 3D Keller map, and 9-sheeted 2D
+Keller maps are beyond every known exclusion (3: Orevkov, 4: Domrina–Orevkov, 5:
+extensions). Therefore
+
+```
+Σ = {B∘F = 0} = H⁻¹(plane),   9:1 étale over 𝔸²,
+```
+
+is **not forbidden** from being 𝔸². Established facts:
+
+- `B∘F` is **irreducible of degree 37**; Σ is a smooth irreducible affine hypersurface
+  (smoothness: étale preimage of a plane).
+- Σ is **ℂ\*-stable** (pure weight), with the origin its unique fixed point.
+- **Fiber machinery.** Over target `(a,b,c)` the x-coordinates of `F⁻¹(a,b,c)` are the
+  valid roots of the cubic `Λ*·x³ + (4−3bc)x − 2c` with
+  `Λ* = 27a²c² − 18abc + 16a + b³c − b²` — so the Jelonek set of F is `{Λ* = 0}`.
+  Over the plane `b=0`: `ψ = a(27ac²+16)x³ + 4x − 2c`, discriminant
+  `−4Λ(27ac²+8)²`; at the marked target `(−1/4, 0)`: `ψ = −4x(x−1)(x+1)` — the three
+  collision x-coordinates. The squared discriminant factor is a fake collision (two
+  sheets share x, differ in (y,z)); the genuine deficiency strata are `{a=0}` (fiber 1)
+  and the ℂ\*-curve `{27ac²+16=0}` (fiber 1).
+- **Euler characteristics via the ℂ\*-action.** Fiber counts are constant on ℂ\*-orbits
+  of the (a,c)-plane; every 1-dimensional orbit is a ℂ\* with `e = 0`, so
+  `e = #(fiber over the origin)`. For S₁: `e(S₁) = #F⁻¹(0) = 1` (confirmed by an
+  independent stratified count `3·0 + 1·1 + 1·0 = 1`). For Σ:
+  **`e(Σ) = #H⁻¹(0) = #F⁻¹(0) = 1`** — the Euler characteristic of the plane.
+- All three preimages of each marked collision point lie on Σ, so the 9:1 map has
+  built-in collisions.
+
+**Dichotomy — either resolution is beyond current knowledge:**
+
+> **Σ ≅ 𝔸² ⟺ JC(2) is false** (the 9:1 restriction is then an explicit 9-sheeted
+> Keller counterexample). **Σ ≇ 𝔸²** requires a new Orevkov-type obstruction at 9
+> sheets. And S₁ (irreducible, smooth, `e = 1`, non-𝔸² *only* because of Orevkov) is an
+> exotic-plane candidate canonically attached to the counterexample.
+
+The recognition problem for the explicit degree-37 hypersurface Σ is now the concrete
+frontier: the next steps are its Makar-Limanov invariant / Derksen invariant, the
+divisor class group of `ℂ[x,y,z]/(B∘F)`, and the DPD (Dolgachev–Pinkham–Demazure)
+presentation of the hyperbolic ℂ\*-surface Σ — each computable in principle from the
+explicit equation, and each capable of deciding the dichotomy.
+
 ## Reproducing
 
 ```
@@ -399,6 +445,7 @@ python3 belyi_k3.py                   # k=3 isotope deg-13 Belyi (live candidate
 python3 belyi_deg16.py                # deg-16 dessin existence (combinatorial)
 python3 belyi16_exact.py              # EXACT deg-16 Belyi + (99,66) near-miss over Q(sqrt(-3))
 python3 multisection_2d.py            # multisection reformulation, collision leaf, linearization
+python3 iterated_preimage.py          # Sigma = {B∘F=0}: irreducible, e=1, 9:1 etale; the dichotomy
 ```
 
 ## Sources
