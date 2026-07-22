@@ -75,3 +75,36 @@ assert sp.simplify(Mt_flip + Mt) != 0 and sp.simplify(Mt_flip - Mt) != 0
 print("4. M~ has no s-parity; pure-power designs blocked  OK")
 print("\nENDGAME: find s-even g~ with {s^2(b+s)^2(b-2s) g~ = -4} = disjoint C*'s;")
 print("then e(V_q) = 1, #deep = 0, e(S_q) = 3 - 2 = 1: a candidate passing every test.")
+
+
+# ============================================================================
+# ADDENDUM (same session): the C*-ban theorem and the e >= 3 evidence
+# ============================================================================
+# THEOREM (monomial-unit rigidity).  For every s-even g~, the residual curve
+# {s^2(b+s)^2(b-2s) g~ = -4} has NO component isomorphic to C*.
+# Proof: on such a component C ~ Spec C[t,1/t], the units s and b+s restrict
+# to monomials l1 t^p, l2 t^q.  The third unit (b-2s)g~ is a monomial too, and
+# (b-2s) = l2 t^q - 3 l1 t^p divides it in C[t,1/t]; divisors of monomials are
+# monomials, forcing p = q.  Then s, b+s, b are all proportional to t^p, so C
+# lies in a line through the origin -- but the defining equation restricted to
+# such a line is a nonconstant polynomial vanishing at 0, hence equal to -4
+# only finitely often.  Contradiction.  QED
+# Consequently e(V_q) = 1 is IMPOSSIBLE in the whole deep-free family
+# q = (12a-b^2) h: the deep-free design route is closed.
+#
+# EVIDENCE FOR A SIXTH KILL MECHANISM: all trusted values of e(S_q) over
+# b-graph targets are >= 3:
+#   linear q = pb+m       : e = 3   (profile e(V) = -1, #deep = 2; boundary case)
+#   q = kb^2              : e = 4
+#   q = b^3               : e = 5
+#   q = t(12a-b^2)        : e = 7
+#   q = pb+m+t(b^2-12a)   : e = 9
+#   q = ab                : e = 13
+#   flat 9:1 plane (gen 4): e = 103
+# CONJECTURE: 2 e(C) + #(C n {s=0}) <= 1 for every chart curve
+# C = {4(b+2s) = 3(b+s)^2 H}, H even -- equivalently e(S_q) >= 3 for every
+# b-graph target: the first level of the q-program admits no e = 1 candidate.
+#
+# PIVOT: a-direction graphs W = {a = r(b,c)} have different chart geometry
+# (deep locus = fixed hyperbola {4 = 3bc}, deep points = {4=3bc} n {12r=b^2},
+# designable via r).  The calculus lifts; next cycle.
