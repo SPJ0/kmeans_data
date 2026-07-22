@@ -507,9 +507,39 @@ parameter.
 `1+AB`: they are nonvanishing on Σ′, so every natural base curve is punctured, and
 punctured bases cannot support 𝔸¹-fibers. The same unit-rigidity of 𝔸² that blocks
 naive 2D constructions from below now *protects* the candidate from the AMS trap.
-Σ′ is the strongest surviving object of the campaign: no known theorem and no found
-trap decides it. The positive program (an explicit 𝔸¹-fibration, `Cl`, Makar-Limanov,
-κ̄) is where the question now lives.
+
+### 9.3 Correction and resolution: the units kill Σ′; the u-trap kills generation 3;
+### complete classification of coordinate level-surfaces (`level_set_classification.py`)
+
+**The "meta-insight" was the murder weapon.** The factorization
+`A_t = (1+ab)·R`, `R = (1+ab)²c + b²(4+3ab)`, means that on `Σ′ = {A∘F = 1}` the
+polynomial `1+AB` is *invertible* — its inverse is `R∘F` — and it is nonconstant on Σ′
+(degree 13 < 43). **A nonconstant unit ⇒ Σ′ ≇ 𝔸².** The round-1 trap-hunt (§9.2)
+missed the units screen, the simplest invariant of all; its fiber computations stand,
+but its conclusion "no known obstruction applies" was wrong. The same kill applies to
+every `{A∘F = δ}` (δ≠0) and — since `C_t = a(2−3ab−a²c)` factors — to every
+`{C∘F = λ}` (λ≠0).
+
+**Generation 3, `Σ″ = {B∘F = β}` (β≠0), dies by a new trap: the u-trap.** On `{u=0}`
+the first coordinate `A = u·(…)` vanishes, so `B∘F|_{u=0} = B|_{u=0} = −2y`; hence
+`{u=0} ∩ Σ″` is the *single reduced line* `{(2/β, −β/2, z)} ≅ 𝔸¹` (at β=1: chart
+equation `x¹³(x−2)` with x≠0; the 2×2 minor of `(du | d(B∘F))` is constantly 1 along
+the line). A generic u-fiber lives in `{xy = μ−1} ≅ ℂ*×𝔸¹`, where any 𝔸¹ must be a
+vertical line (maps 𝔸¹→ℂ* are constant); at μ=2 the fiber is one irreducible
+(12,6)-curve with no vertical factor — not 𝔸¹. Epimorphism ⇒ **Σ″ ≇ 𝔸²**.
+
+> **Classification.** No level surface of any coordinate of `H = F∘F` is 𝔸²:
+> `{A∘F = δ}` and `{C∘F = λ}` die by units; `{B∘F = 0}` by the axis-AMS trap (§9.1);
+> `{B∘F = β}`, β≠0, by the u-trap. Three distinct kill mechanisms, all elementary
+> once seen, none previously in the JC literature (they need the explicit F).
+
+**Generation 4 opens: generic-plane level sets.** For `K = αa + βb + γc` with generic
+coefficients, `{K∘F = δ}` dodges all three mechanisms: `K_t` does not factor (no unit
+kill); on `{u=0}` the triple `(A∘F, B∘F, C∘F) = (c+4b², b, 0)` makes the u=0 fiber a
+graph over `y ∈ ℂ*` — a ℂ*, not an 𝔸¹ (no u-trap); and the `{A=0}`-fiber decomposes
+along `A = u·R₀` (reducible — no A-trap). The generation-4 recognition problem is
+open, and the loop continues: each generation either dies by a sharper elementary
+mechanism or survives one filter closer to being the counterexample.
 
 **Dichotomy — either resolution is beyond current knowledge:**
 
@@ -538,7 +568,8 @@ python3 multisection_2d.py            # multisection reformulation, collision le
 python3 iterated_preimage.py          # Sigma = {B∘F=0}: irreducible, 9:1 etale; the dichotomy
 python3 ams_obstruction.py            # resolution: Sigma (and S1, {B=c}) are NOT A^2
 python3 candidate_sigma_prime.py      # second-generation candidate Sigma' = {A o F = 1}
-python3 traphunt_sigma_prime.py       # round 1: Sigma' survives every AMS trap
+python3 traphunt_sigma_prime.py       # round 1 fiber computations (conclusion superseded by 9.3)
+python3 level_set_classification.py   # units kill + u-trap: no coordinate level surface is A^2
 ```
 
 ## Sources
