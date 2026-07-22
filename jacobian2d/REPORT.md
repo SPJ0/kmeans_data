@@ -433,9 +433,42 @@ is **not forbidden** from being 𝔸². Established facts:
   (a,c)-bidegree (14,11) (total degree 24, 28 monomials) and E′ bidegree (14,25).
   Sampling fibers on each: on E the 9:1 map drops to **7** (genuine second-layer
   deficiency: one intermediate point crosses the Jelonek surface), on E′ it stays 9
-  (spurious factor). The remaining input for `e(Σ)` is the Euler characteristic of the
-  explicit degree-24 plane curve E and the crossing corrections — the next computation
-  in line, along with the Makar-Limanov invariant of Σ.
+  (spurious factor).
+
+### 9.1 Resolution of the dichotomy: Σ ≇ 𝔸² (the AMS/Epimorphism obstruction)
+
+The dichotomy is **decided — negatively — by a new mechanism** (`ams_obstruction.py`),
+independent of Orevkov's theorem and effective at *any* sheet number.
+
+**The obstruction.** The Abhyankar–Moh Epimorphism Theorem: if `f ∈ ℂ[s,t]` has a
+scheme fiber that is a reduced irreducible 𝔸¹ (`ℂ[s,t]/(f) ≅ ℂ[T]`), then f is a
+coordinate — so *all* its fibers are reduced 𝔸¹'s. Hence a smooth affine surface
+carrying a regular function with one reduced 𝔸¹-fiber and one non-𝔸¹ fiber cannot
+be 𝔸².
+
+- **S₁ ≇ 𝔸², Orevkov-free.** The function x on S₁ has fibers ≅ ℂ* for x ≠ 0 (the
+  z-graph has a genuine pole at `y = −1/λ`, numerator −2/λ) and the *reduced z-axis*
+  (≅ 𝔸¹) over x = 0 (`B(0,y,z) = y`). AMS kills planarity.
+- **Every level set {B=c} ≇ 𝔸²** — same fibration, with a second 𝔸¹-fiber at
+  `x = 2/c` where the pole cancels.
+- **Σ ≇ 𝔸².** The z-axis lies *inside the Jelonek set* of F (`Λ*(0,0,t) = 0`), with
+  single-point fibers `F⁻¹(0,0,t) = {(t/2,0,0)}` — so the zero fiber of `A|Σ` is
+  exactly the **x-axis**, and along the whole axis `dA = (0,0,1)`,
+  `d(B∘F) = (0,1,9x)` have constant minor −1: the fiber is smooth of multiplicity
+  one, a reduced irreducible 𝔸¹. Generic fibers of `A|Σ` are étale ≤3:1 covers of
+  punctured ℂ*'s — no component can be 𝔸¹ (an étale dominant map 𝔸¹ → ℂ* is a
+  nonvanishing polynomial with nonvanishing derivative: impossible). AMS closes it.
+
+**Moral: the Jelonek set is the enemy.** Deficiency loci in the target whose fibers
+drop to single points pull back to reduced 𝔸¹-fibers inside preimage surfaces, and AMS
+turns those into exoticity certificates. Any future iterated-preimage construction must
+arrange the deficient fibers to be *empty* (full escape) rather than singletons.
+
+**Byproduct.** S₁, {B=c}, Σ form an explicit family of smooth affine surfaces with
+trivial units, `Cl = 0`, `e(S₁) = 1`, `π₁(S₁) = 1` — plane-like in every classical
+invariant — that are *not* 𝔸²: exotic-plane-type surfaces canonically attached to the
+Jacobian counterexample, with κ̄ ∈ {0,1} forced (an 𝔸¹-fibration would trigger
+Miyanishi–Sugie ⇒ 𝔸²).
 
 **Dichotomy — either resolution is beyond current knowledge:**
 
@@ -461,7 +494,8 @@ python3 belyi_k3.py                   # k=3 isotope deg-13 Belyi (live candidate
 python3 belyi_deg16.py                # deg-16 dessin existence (combinatorial)
 python3 belyi16_exact.py              # EXACT deg-16 Belyi + (99,66) near-miss over Q(sqrt(-3))
 python3 multisection_2d.py            # multisection reformulation, collision leaf, linearization
-python3 iterated_preimage.py          # Sigma = {B∘F=0}: irreducible, e=1, 9:1 etale; the dichotomy
+python3 iterated_preimage.py          # Sigma = {B∘F=0}: irreducible, 9:1 etale; the dichotomy
+python3 ams_obstruction.py            # resolution: Sigma (and S1, {B=c}) are NOT A^2
 ```
 
 ## Sources
