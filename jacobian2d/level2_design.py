@@ -136,3 +136,11 @@ print("targets: e(V') = 4, or mixed escape/normal profile summing to delta_2 = 8
 #     ~36-unit level-2 swing requires.  Exact determination of deg(Phi) (via
 #     proper elimination over an exact rational base point) is the next open
 #     computation of the level-2 program.
+
+#   * RESOLVED (same session): deg(Phi) = 1 EXACTLY -- Groebner saturation at a
+#     rational base point yields a single solution (basis {s-lin, b-lin, t-lin}).
+#     F restricted to its Jelonek surface is BIRATIONAL onto its image: the
+#     numeric ~15 was tolerance noise, and there is no pullback-splitting lever.
+#     The level-2 swing must come from contact with the distinguished
+#     structures (the nine caustic points, D2, the (10,12) deep-core) or from
+#     deeper-level escape designs -- not from covering multiplicity.
