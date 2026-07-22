@@ -428,6 +428,14 @@ is **not forbidden** from being 𝔸². Established facts:
   `1+3+3 = 7` points exactly — the intermediate `p₁ = (0,0,−1/4)` lies *on* the
   Jelonek set (`Λ*(p₁) = 0`, single preimage `(−1/8,0,0)`), while `p₂, p₃` are off it.
   The 9:1 map on Σ has abundant built-in collisions.
+- **The deficiency curve E is computed** (`E_curve.txt`): eliminating (y, x) from
+  `{N_B, N_A, N_Λ}` via resultants gives `res_x(ψ̂, U) = c¹²·E·E'`, where E has
+  (a,c)-bidegree (14,11) (total degree 24, 28 monomials) and E′ bidegree (14,25).
+  Sampling fibers on each: on E the 9:1 map drops to **7** (genuine second-layer
+  deficiency: one intermediate point crosses the Jelonek surface), on E′ it stays 9
+  (spurious factor). The remaining input for `e(Σ)` is the Euler characteristic of the
+  explicit degree-24 plane curve E and the crossing corrections — the next computation
+  in line, along with the Makar-Limanov invariant of Σ.
 
 **Dichotomy — either resolution is beyond current knowledge:**
 
