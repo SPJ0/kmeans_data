@@ -470,6 +470,27 @@ invariant — that are *not* 𝔸²: exotic-plane-type surfaces canonically atta
 Jacobian counterexample, with κ̄ ∈ {0,1} forced (an 𝔸¹-fibration would trigger
 Miyanishi–Sugie ⇒ 𝔸²).
 
+### 9.2 Second generation: Σ′ = {A∘F = 1} dodges the trap (`candidate_sigma_prime.py`)
+
+Classifying first-level planes by their trap status: `{b=const}` → AMS trap (singleton
+Jelonek fibers over the z-axis — checked *family-wide*: the (8,7,5) instance collapses
+identically, forced by `w² | a₀`, `w | b₀`); `{c=const}` → units obstruction
+(≅ ℂ*×𝔸¹); but **`{a=δ}`, δ ≠ 0 escapes**: the x=0 fiber of `S_P` is the parabola
+`L_P = {(0,y,δ−4y²)}`, which meets the Jelonek set (`Λ*|_{a=0} = b²(bc−1)`) in only
+finitely many points — fibers over `L_P` are generically 3 points, not singletons. And
+the would-be trap function's zero fiber `F⁻¹(L_P)` is **reducible** — since
+`A = u·(u²z + y²(4+3xy))`, it splits as a ℂ*-component
+`{x = −1/y, z = −16y⁵+y³+5y²}` plus a bidegree-(2,4) plane-curve component — and the
+Epimorphism theorem requires an *irreducible* 𝔸¹-fiber. The known obstruction fails
+structurally.
+
+> **New live candidate: Σ′ = {A∘F = 1}** — irreducible of degree 43, smooth, carrying
+> the 9:1 étale map `(B∘F, C∘F)` to `{a=1} ≅ 𝔸²`. **Σ′ ≅ 𝔸² ⟺ JC(2) is false**, and
+> no known obstruction applies. Protocol before positive recognition tools: hunt for
+> AMS traps among all natural functions on Σ′ (`B∘F`, `C∘F`, coordinates, `u`,
+> low-degree combinations) — any reduced irreducible 𝔸¹-fiber with non-𝔸¹ generic
+> fibers kills it; if all dodge, proceed to fibrations, `Cl`, Makar-Limanov, κ̄.
+
 **Dichotomy — either resolution is beyond current knowledge:**
 
 > **Σ ≅ 𝔸² ⟺ JC(2) is false** (the 9:1 restriction is then an explicit 9-sheeted
@@ -496,6 +517,7 @@ python3 belyi16_exact.py              # EXACT deg-16 Belyi + (99,66) near-miss o
 python3 multisection_2d.py            # multisection reformulation, collision leaf, linearization
 python3 iterated_preimage.py          # Sigma = {B∘F=0}: irreducible, 9:1 etale; the dichotomy
 python3 ams_obstruction.py            # resolution: Sigma (and S1, {B=c}) are NOT A^2
+python3 candidate_sigma_prime.py      # second-generation candidate Sigma' = {A o F = 1}
 ```
 
 ## Sources
