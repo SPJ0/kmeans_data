@@ -144,3 +144,14 @@ print("targets: e(V') = 4, or mixed escape/normal profile summing to delta_2 = 8
 #     The level-2 swing must come from contact with the distinguished
 #     structures (the nine caustic points, D2, the (10,12) deep-core) or from
 #     deeper-level escape designs -- not from covering multiplicity.
+
+#   * TOTAL-AVOIDANCE THEOREM (same session): res_b(R, deepcore) is a NONZERO
+#     CONSTANT (an exact 79-digit integer) -- the double-deficiency curve D2
+#     and the level-2 deep locus are COMPLETELY DISJOINT in the (s,b)-chart.
+#     Deep' degenerations can never anchor at doubly-deficient points: the
+#     level-2 defense is total avoidance, stronger than the level-1 forced
+#     tangencies.  Combined with deg(Phi) = 1 (no splitting) and the square
+#     structures (tangency tax), every identified source of level-2 design
+#     cancellation is provably neutralized.  The defense-conjecture evidence
+#     is now overwhelming at both levels: the iterated-preimage route defends
+#     JC(2) through exact arithmetic rigidity at every point of attack found.
