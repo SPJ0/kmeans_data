@@ -554,6 +554,27 @@ divisor class group of `ℂ[x,y,z]/(B∘F)`, and the DPD (Dolgachev–Pinkham–
 presentation of the hyperbolic ℂ\*-surface Σ — each computable in principle from the
 explicit equation, and each capable of deciding the dichotomy.
 
+### 9.4 Generation 4: the generic plane dodges the whole arsenal (`generation4.py`)
+
+`Σ₄ = {(A+B+C)∘F = 1}` — irreducible, degree 43, smooth, 9:1 étale over
+`P = {a+b+c=1} ≅ 𝔸²` — survives **all four** kill mechanisms, with a uniform reason:
+the generic plane mixes coordinates so every special locus becomes *punctured* (ℂ\*)
+rather than 𝔸¹:
+
+1. **No units kill**: `K_t = A_t+B_t+C_t` is irreducible (degree 7) — no factorization,
+   no invertible cofactor.
+2. **No u-trap**: the u=0 fiber is the graph `z = (5x³−x²+2x+16)/x⁵` over `x ∈ ℂ*` — a ℂ*.
+3. **No level-2 u-trap**: `{1+AB=0} ∩ Σ₄ = F⁻¹(Γ)` with `Γ = {(s,−1/s,(2+5s²−s)/s⁴)} ≅ ℂ*`
+   (verified `K_t ≡ 1` on Γ); punctured base ⇒ no 𝔸¹-components.
+4. **No A-trap**: the `{A=0}`-fiber splits along `A = u·R₀` — reducible.
+
+**Decisive open test: `e(Σ₄)`** via the two-level deficiency stratification over P.
+First input computed: the first-level deficiency curve `D₁ = {Λ*=0}∩P` is an
+irreducible quartic in (a,b) with **`e(D₁) = 4·(1−6) + 19 = −1`** (six branch values of
+the 4:1 b-projection, 19 fiber points over them, constant leading coefficient). The
+second-level curve `E₄` (elimination pipeline as in §9) and the stratified assembly
+remain: `e(Σ₄) ≠ 1` kills; `e(Σ₄) = 1` escalates to `Cl`/Makar-Limanov/κ̄.
+
 ## Reproducing
 
 ```
@@ -570,6 +591,7 @@ python3 ams_obstruction.py            # resolution: Sigma (and S1, {B=c}) are NO
 python3 candidate_sigma_prime.py      # second-generation candidate Sigma' = {A o F = 1}
 python3 traphunt_sigma_prime.py       # round 1 fiber computations (conclusion superseded by 9.3)
 python3 level_set_classification.py   # units kill + u-trap: no coordinate level surface is A^2
+python3 generation4.py                # generation 4 survives all four mechanisms; e(D1) = -1
 ```
 
 ## Sources
