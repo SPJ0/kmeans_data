@@ -105,3 +105,20 @@ print("targets: e(V') = 4, or mixed escape/normal profile summing to delta_2 = 8
 # governing object for level-2 deep/escape designs.  Its geometry (Euler
 # characteristic, special points, position relative to the caustic and the
 # deep hyperbola pullback) is the next computation in the program.
+
+# FURTHER DATA (same session):
+#   * The level-2 deep locus {4 - 3 Phi_B Phi_C = 0} has numerator
+#     (linear)^2 * (irreducible bidegree-(10,12), 27 monomials): the square-on-
+#     a-linear-factor pattern persists at level 2, promising the same
+#     forced-tangency defense that enforced the level-1 barrier.
+#   * e(D2) = -26 for the double-deficiency curve (bidegree (8,10)) -- echoing
+#     the level-1 generic-fiber value.  All governing curves of this geometry
+#     carry strongly negative Euler characteristics.
+# SYNTHESIS.  At every level examined, the Jelonek geometry of F pays back
+# every topological design gain through perfect-power identities and forced
+# tangencies.  The cumulative evidence supports a defense conjecture: for
+# every embedded plane W and every k, e((F^k)^{-1}(W)) >= 3^k -- which would
+# close the iterated-preimage program entirely and stands as a candidate
+# theorem about the new Keller map.  Falsifying JC(2) through this route
+# requires breaking one of these conspiracies; proving the defense conjecture
+# would be the definitive negative result for the route.
