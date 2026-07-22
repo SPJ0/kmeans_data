@@ -636,6 +636,29 @@ Landscape so far: `e(S_q) ∈ {4,5,6,7,10,13}` over simple q's (vs 103 for the f
 `e(V) = 1`; the Orevkov statement check (a first-level hit is 3-sheeted); and the
 second-level (9:1, Orevkov-free) lift of the calculus.
 
+### 9.7 The design endgame: e(V_q) ≤ 1 and the residual ℂ*-problem (`design_endgame.py`)
+
+Three further structural results sharpen the q-program to a single question:
+
+- **Origin lemma & boundary-unit bound.** The c-axis `{a=b=0}` lies inside the Jelonek
+  surface, so the origin is on `V_q` for *every* q; and the chart function `b+s` is a
+  unit on every component away from it. Hence **`e(V_q) ≤ 1`**, with equality iff
+  `V_q = (𝔸¹ through the origin) ⊔ ℂ*-components`. With the (12a−b²)-trick this makes
+  `e(S_q) = 1` *equivalent* to that exact shape.
+- **Unique graph component.** The only graph-type 𝔸¹-component the curve can have is
+  `{b = −2s}`, forced by `(16a−b²) | h`; then everything factors cleanly:
+  **`P_h = (b+2s)·[4 + s²(b+s)²(b−2s)·g̃]`** with `g̃` ranging over all s-even
+  polynomials.
+- **The residual problem.** `e(S_q) = 1` ⟺ some s-even `g̃` makes
+  `{s²(b+s)²(b−2s)·g̃ = −4}` a **disjoint union of ℂ*'s**. Obstructions so far:
+  constant `g̃` gives a 5:1 cover of thrice-punctured ℙ¹ (e = −5); pure powers are
+  blocked by the s-parity of `(b−2s)`; products inside `ℂ[s(b+s)]` are blocked because
+  `(b−2s)` never divides them. The question is adjacent to the Zaidenberg–Lin/Suzuki
+  theory of polynomials with simple fibers — sharp, explicit, and open. It is the
+  narrowest formulation of the campaign's goal to date: one plane-curve family, one
+  Euler condition, and (should it be solved at the first level) the Orevkov statement
+  as the final gate — or its 9-sheeted lift, which no known theorem touches.
+
 ## Reproducing
 
 ```
@@ -655,6 +678,7 @@ python3 level_set_classification.py   # units kill + u-trap: no coordinate level
 python3 generation4.py                # generation 4 survives all four mechanisms; e(D1) = -1
 python3 euler_sigma4.py               # e(Sigma4) = 103 != 1: generation 4 is NOT A^2
 python3 qprogram.py                   # design calculus: identities, (12a-b^2)-trick, e-landscape
+python3 design_endgame.py             # e(V_q) <= 1; unique A^1 component; the residual C*-problem
 ```
 
 ## Sources
