@@ -404,7 +404,6 @@ is **not forbidden** from being 𝔸². Established facts:
 
 - `B∘F` is **irreducible of degree 37**; Σ is a smooth irreducible affine hypersurface
   (smoothness: étale preimage of a plane).
-- Σ is **ℂ\*-stable** (pure weight), with the origin its unique fixed point.
 - **Fiber machinery.** Over target `(a,b,c)` the x-coordinates of `F⁻¹(a,b,c)` are the
   valid roots of the cubic `Λ*·x³ + (4−3bc)x − 2c` with
   `Λ* = 27a²c² − 18abc + 16a + b³c − b²` — so the Jelonek set of F is `{Λ* = 0}`.
@@ -413,13 +412,22 @@ is **not forbidden** from being 𝔸². Established facts:
   collision x-coordinates. The squared discriminant factor is a fake collision (two
   sheets share x, differ in (y,z)); the genuine deficiency strata are `{a=0}` (fiber 1)
   and the ℂ\*-curve `{27ac²+16=0}` (fiber 1).
-- **Euler characteristics via the ℂ\*-action.** Fiber counts are constant on ℂ\*-orbits
-  of the (a,c)-plane; every 1-dimensional orbit is a ℂ\* with `e = 0`, so
-  `e = #(fiber over the origin)`. For S₁: `e(S₁) = #F⁻¹(0) = 1` (confirmed by an
-  independent stratified count `3·0 + 1·1 + 1·0 = 1`). For Σ:
-  **`e(Σ) = #H⁻¹(0) = #F⁻¹(0) = 1`** — the Euler characteristic of the plane.
-- All three preimages of each marked collision point lie on Σ, so the 9:1 map has
-  built-in collisions.
+- **Euler characteristic of S₁ via the ℂ\*-action.** F *is* equivariant, so fiber
+  counts are constant on ℂ\*-orbits of the (a,c)-plane; every 1-dimensional orbit is a
+  ℂ\* with `e = 0`, hence `e(S₁) = #(fiber over the origin) = #F⁻¹(0) = 1` — confirmed
+  by an independent stratified count `3·0 + 1·1 + 1·0 = 1`.
+- **Correction (important).** `H = F∘F` is **not** ℂ\*-equivariant — F's target weights
+  `(2,1,−1)` differ from its source weights `(−1,1,2)` — so Σ is *not* ℂ\*-stable
+  (`B∘F` splits into graded pieces of weights differing by 3) and the orbit argument
+  does **not** apply to Σ. An earlier version of this section claimed `e(Σ) = 1`; that
+  claim is withdrawn. **`e(Σ)` is currently open**: it requires the second-layer
+  deficiency curve `E = (A,C)(S₁ ∩ {Λ*=0})` and the stratified count
+  `e(Σ) = 9·e(U) + 3·e(L₁°) + 3·e(Q°) + 7·e(E°) + (point corrections)`.
+- Generic fibers of the 9:1 map were verified numerically (Newton-refined) at two
+  generic targets: exactly 9 points. Over the marked target the fiber is
+  `1+3+3 = 7` points exactly — the intermediate `p₁ = (0,0,−1/4)` lies *on* the
+  Jelonek set (`Λ*(p₁) = 0`, single preimage `(−1/8,0,0)`), while `p₂, p₃` are off it.
+  The 9:1 map on Σ has abundant built-in collisions.
 
 **Dichotomy — either resolution is beyond current knowledge:**
 
