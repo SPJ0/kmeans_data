@@ -659,6 +659,30 @@ Three further structural results sharpen the q-program to a single question:
   Euler condition, and (should it be solved at the first level) the Orevkov statement
   as the final gate — or its 9-sheeted lift, which no known theorem touches.
 
+### 9.8 The a-graph escape design and the first-level barrier (`agraph_escape.py`)
+
+Pivoting to a-direction graphs `W = {a = r(b,c)}` realizes the **full-escape design**
+demanded by the original AMS-moral: with `r = b²/12 + (3bc−4)ρ` the entire deep
+hyperbola `{4=3bc}` enters the deficiency curve with `ψ̃ = −2c` — **empty fibers**.
+A new exact identity emerges:
+
+> `Λ*∘graph = (3bc−4)²·[(b+36ρc)² − 192ρ]/48`
+
+— the residual deficiency curve is a **pair of parallel lines** (two 𝔸¹'s, e = 2!).
+Yet its two hyperbola-contacts (at `b² = 48ρ`) are *forcibly tangential* (another
+perfect square: `G_res|hyp = (b²−48ρ)²/(48b²)`), and the Euler assembly returns
+`e(S_r) = 3(1−0) + (2−2) = 3` — the gain exactly cancelled.
+
+**The first-level barrier (conjecture, heavily supported).** Every computed value of
+`e(F⁻¹(W))` over both graph directions is ≥ 3 — {3,4,5,7,9,13,103} — with equality on
+several distinct designs, each time via a different conspiracy of forced tangencies
+rooted in the perfect-square structure of Λ*. Conjecture: **`e(F⁻¹(W)) ≥ 3` for every
+closed embedded plane W ⊂ ℂ³** — an index-style barrier killing all first-level
+(3-sheeted) candidates independently of Orevkov. The hunt accordingly moves to the
+second level (9:1): `e₂ = 3e₁ − δ₂` with `e₁ = 3` achievable and the level-2
+deficiency curve living on a *curved* surface, outside the reach of the unit-rigidity
+arguments that enforce the level-1 conspiracies. Design target: `δ₂ = 8`.
+
 ## Reproducing
 
 ```
@@ -679,6 +703,7 @@ python3 generation4.py                # generation 4 survives all four mechanism
 python3 euler_sigma4.py               # e(Sigma4) = 103 != 1: generation 4 is NOT A^2
 python3 qprogram.py                   # design calculus: identities, (12a-b^2)-trick, e-landscape
 python3 design_endgame.py             # e(V_q) <= 1; unique A^1 component; the residual C*-problem
+python3 agraph_escape.py              # escape design realized; first-level barrier e >= 3
 ```
 
 ## Sources
