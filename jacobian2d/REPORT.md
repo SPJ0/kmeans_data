@@ -697,6 +697,29 @@ of q, none of the level-1 rigidity structures proved against it, and *both* leve
 coefficient 3) toward the target `δ₂ = 8`, e.g. `e(V′) = 4`. This — with the
 first-level barrier conjecture and the Orevkov verification — is the open frontier.
 
+### 9.10 Orevkov verified; constraint box corrected
+
+From [van den Essen's survey (Banach Center Publ. 31)](https://matwbn.icm.edu.pl/ksiazki/bcp/bcp31/bcp31116.pdf),
+Theorem 4.2: a polynomial map `F: ℂ²→ℂ²` with `Jac F = 1` is injective if any of:
+(i) g has one branch at infinity; (ii) `g−c` has ≤ 2 branches at infinity for
+infinitely many c; (iii) f is proper on `g⁻¹(0)`; **(iv) `max #F⁻¹(w) ≤ 3`** — the
+three-sheeted case being **Orevkov 1986, unconditional** (the
+irreducible-ramification-curve hypothesis belongs to the *four*-sheeted
+Domrina–Orevkov paper).
+
+Corrections and consequences:
+- The first-level (3:1) program is definitively closed by Orevkov, independent of the
+  barrier conjecture — which now stands as an independent *Euler-characteristic proof
+  mechanism* for the same territory, and extra evidence for its own correctness.
+- **Constraint-box correction**: the unconditional geometric-degree bound for a 2D
+  Keller counterexample is **≥ 4** (not ≥ 6 as earlier search summaries suggested);
+  4-sheeted is excluded only in the irreducible-ramification-curve case, and the
+  claimed 5-sheeted extension is unverified. The 9-sheeted level-2 arena remains
+  untouched by all of it.
+- **New spec-sheet constraint** from (ii): every component g of a 2D counterexample
+  must have ≥ 3 branches at infinity for all but finitely many level sets `g−c` — a
+  further design test for any future candidate's coordinate functions.
+
 ## Reproducing
 
 ```
