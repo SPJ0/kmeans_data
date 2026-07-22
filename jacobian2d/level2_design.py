@@ -75,3 +75,33 @@ assert sp.simplify(val) == 0
 print("3. param lands in the Jelonek surface (Lam* = 0)  OK")
 print("Level-2 design equation: { Phi_C = q(Phi_A, Phi_B) } with q free;")
 print("targets: e(V') = 4, or mixed escape/normal profile summing to delta_2 = 8.")
+
+
+# ============================================================================
+# ADDENDUM (same session): coupled scan, caustic, and the double-deficiency curve
+# ============================================================================
+# COUPLED LEVEL-1/2 SCAN (e2 = 3 e1 - 2 e(V') - #deep'):
+#   q = b+1, 2b-1, b-2  : e1 = 3, e(V') = -32, #deep' = 8   =>  e2 = 65
+#   q = a+-b+1          : e1 = 4, e(V') = -44, #deep' = 10  =>  e2 = 90
+# The level-2 inflation repeats; reaching e2 = 1 needs a ~36-unit swing in
+# e(V'), i.e. structural splittings, not O(1) tangency levers.
+#
+# CRITICAL GEOMETRY OF Phi.  The critical locus of Phi = F o param is EXACTLY
+# {s = 0} -- the parabola spine yet again.  Its image, the caustic
+#     Phi(0,b) = F(b^2/12, b, 4/(3b)) =
+#     ( (b^3+12)(7b^6+114b^3+36)/(324 b),
+#       b (7b^6+114b^3+144)/108,
+#       -b^2 (7b^3-54)/324 ),
+# has an A-pole at b = 0, so NO graph target (in any coordinate direction)
+# can contain it: caustic-containment designs are impossible; only finite
+# tangency levers remain from this source.
+#
+# THE DOUBLE-DEFICIENCY CURVE.  Lam* o Phi has numerator (b+s)^4 * R with R
+# IRREDUCIBLE of bidegree (8,10) (23 monomials), against denominator
+# const*(b+s)^6: the quartic power partially cancels the boundary pole and
+# the genuine locus {Lam* o Phi = 0} = {R = 0} is the chart form of
+#     D2 = A(F) n F^{-1}(A(F)),
+# the curve of deficient targets whose images are again deficient -- the
+# governing object for level-2 deep/escape designs.  Its geometry (Euler
+# characteristic, special points, position relative to the caustic and the
+# deep hyperbola pullback) is the next computation in the program.
