@@ -341,6 +341,53 @@ system is now partially seeded by the explicit Belyi data above. This is where t
 2D question currently lives: either the k=3 cascade closes (automorphism-style collapse,
 extending the pattern of §3), or its solution is the first 2D Keller map.
 
+## 8. Contrarian route: the 3D map as an engine — interpolating multisections
+
+No one can have searched this region before 2026-07-20: it needs the explicit 3D map
+as raw material (`multisection_2d.py`).
+
+**Reformulation (non-injectivity for free).** Let `p₂ = (1,−3/2,13/2)`,
+`p₃ = (−1,3/2,13/2)` (marked points with `F(p₂) = F(p₃)`). For *any* polynomial map
+`φ: ℂ² → ℂ³` — no embedding, no étaleness — set `g = (A∘φ, B∘φ)`. If φ interpolates
+`φ(q₂) = p₂`, `φ(q₃) = p₃` then `g(q₂) = g(q₃)` automatically, and
+
+> **JC(2) is false ⟺ some interpolating φ satisfies the single PDE
+> `φ*(dA∧dB) = c·ds∧dt`, c ≠ 0** (⟸ direction; the classical hard part —
+> non-injectivity — is built in, and all difficulty moves into a soft-looking
+> constant-area condition on a surface parametrization).
+
+Facts established:
+
+- The trivial section `φ₀ = (0,s,t)` solves the PDE (`det = −1`, injective); affine
+  interpolating planes admit only degenerate (`det ≡ 0`) solutions.
+- **μ₂-equivariant sector.** `p₂, p₃` are swapped by the ℂ\*-action at `λ = −1`.
+  Full ℂ\*-equivariance of φ is forbidden (it would make g equivariant, hence linear by
+  Theorem A), but ℤ/2-equivariance `φ∘(−s,t) = (−x,−y,z)∘φ` is *not*: interpolation at
+  one point suffices. Parity kills the `(B,C)`-projection (det forced odd ⇒ c = 0);
+  `(A,B)` and `(A,C)` survive. Degrees 1–2: no solutions — consistent with Moh, which
+  requires `deg φ ≥ 15` for any success. Equivariant JC(2) for *finite* groups appears
+  to be untouched territory.
+- **The collision leaf.** `{B=C=0} = 𝔸¹ ⊔ ℂ*`: the z-axis with `A = z` (bijective
+  section sheet) and `{(x, −3/(2x), 13/(2x²))}` with **`A = −1/(4x²)`** — an étale
+  double cover of `ℂ∖{0}` whose deck transformation is exactly `x ↦ −x`. Fibers:
+  `1+2` over `a ≠ 0`, `1` over the escape value `a = 0`; the triple collision at
+  `a = −1/4` is the section point plus the μ₂-pair `x = ±1`. The **1D germ** of the
+  counterexample is `𝔸¹ ⊔ ℂ* → 𝔸¹`, `(z,x) ↦ (z, −1/(4x²))` — étale and non-injective
+  *because it is powered by a unit*. JC(2) asks whether the ℂ*-sheet can be thickened
+  to an 𝔸²-sheet; 𝔸² has only constant units — the same rigidity every route hits,
+  now localized on one explicit curve.
+- **No infinitesimal obstruction.** The linearization of the PDE at φ₀ is
+  `L(δ) = −div(δ₂,δ₃) − 3s·δ₁ − (12s²+3t)∂ₛδ₁ + (89s³+21st)∂ₜδ₁`, **surjective on
+  polynomials** (every polynomial is a divergence): any transverse motion δ₁ — the
+  direction that must reach `x = ±1` — can be compensated at every order. The
+  deformation theory is completely flexible; the entire content of JC(2) here is a
+  *global degree-finiteness* question (do the order-by-order corrections resum to a
+  polynomial of finite degree?).
+- **Consistency box.** An embedded bisection would be a geometric-degree-2 Keller map
+  (impossible, §4); a trisection is killed by Orevkov. So a successful multisection must
+  cut generic `(A,B)`-leaves ≥ 6 times while interpolating the marked μ₂-pair — sharp,
+  previously unformulated targets for a construction.
+
 ## Reproducing
 
 ```
@@ -351,6 +398,7 @@ python3 rigidity_2d.py                # Theorem A + two-piece sector rigidity
 python3 belyi_k3.py                   # k=3 isotope deg-13 Belyi (live candidate engine)
 python3 belyi_deg16.py                # deg-16 dessin existence (combinatorial)
 python3 belyi16_exact.py              # EXACT deg-16 Belyi + (99,66) near-miss over Q(sqrt(-3))
+python3 multisection_2d.py            # multisection reformulation, collision leaf, linearization
 ```
 
 ## Sources
