@@ -683,6 +683,20 @@ second level (9:1): `e₂ = 3e₁ − δ₂` with `e₁ = 3` achievable and the 
 deficiency curve living on a *curved* surface, outside the reach of the unit-rigidity
 arguments that enforce the level-1 conspiracies. Design target: `δ₂ = 8`.
 
+### 9.9 Level-2 design: the composed map Φ = F∘param (`level2_design.py`)
+
+The 9:1 candidates `Σ₂ = F⁻¹(S)` over e₁=3 level-1 designs satisfy
+`e₂ = 9 − 2e(V′) − #deep′ (+ escape terms)` with `V′ = S ∩ A(F) = (F|_A)⁻¹(W)`.
+Baseline (linear W): `e(V′) = −34`, `e₂ ≈ 68` — the inflation repeats. But the
+rationality of the Jelonek surface collapses V′ to **one plane-curve equation**:
+`{Φ_C = q(Φ_A, Φ_B)}` in the (s,b)-chart, where Φ = F∘param is now computed:
+**Φ_C is a polynomial** — `(s−b)(s+b)(14b³−15bs²+s³−108)/648` — while Φ_B and Φ_A
+have only simple and double `(b+s)`-poles. The level-2 design has the full freedom
+of q, none of the level-1 rigidity structures proved against it, and *both* levers
+(normal deficiency, coefficient 2; engineered escape components inside `{4=3yz}`,
+coefficient 3) toward the target `δ₂ = 8`, e.g. `e(V′) = 4`. This — with the
+first-level barrier conjecture and the Orevkov verification — is the open frontier.
+
 ## Reproducing
 
 ```
@@ -704,6 +718,7 @@ python3 euler_sigma4.py               # e(Sigma4) = 103 != 1: generation 4 is NO
 python3 qprogram.py                   # design calculus: identities, (12a-b^2)-trick, e-landscape
 python3 design_endgame.py             # e(V_q) <= 1; unique A^1 component; the residual C*-problem
 python3 agraph_escape.py              # escape design realized; first-level barrier e >= 3
+python3 level2_design.py              # level-2 foundation: Phi = F o param, design equation
 ```
 
 ## Sources
