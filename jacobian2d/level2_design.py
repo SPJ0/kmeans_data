@@ -122,3 +122,17 @@ print("targets: e(V') = 4, or mixed escape/normal profile summing to delta_2 = 8
 # theorem about the new Keller map.  Falsifying JC(2) through this route
 # requires breaking one of these conspiracies; proving the defense conjecture
 # would be the definitive negative result for the route.
+
+# FURTHER STRUCTURAL DATA (same session):
+#   * The caustic is NOT inside the Jelonek surface: Lam* restricted to it is
+#     -(49 b^9 + 420 b^6 - 5148 b^3 - 1728)/(81 b).  Its nine roots are
+#     DISTINGUISHED CAUSTIC POINTS that are simultaneously critical values of
+#     Phi and Jelonek-deficient targets -- the deepest special points of the
+#     two-level geometry, natural anchors for tangency designs.
+#   * A crude numeric preimage count for a generic Phi-value returned ~15
+#     (loose tolerance; resultant structure (1,13)) -- UNRELIABLE, but if the
+#     exact geometric degree of Phi exceeds 1, systematic pullback-splitting
+#     of V' = Phi^{-1}(W) exists, providing exactly the structural lever the
+#     ~36-unit level-2 swing requires.  Exact determination of deg(Phi) (via
+#     proper elimination over an exact rational base point) is the next open
+#     computation of the level-2 program.
