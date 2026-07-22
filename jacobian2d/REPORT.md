@@ -615,6 +615,27 @@ planes and beyond, i.e. the *q-program* `Σ_q = {(C − q(A,B))∘F = 0}` (9:1 �
 the graph surface `{c = q(a,b)} ≅ 𝔸²`), whose infinitely many coefficients are the
 knobs for the design equation `Σ(corrections) = d − 1`. That is where the hunt
 continues.
+### 9.6 The q-program and the design calculus (`qprogram.py`)
+
+Curved-graph candidates `S_q = {C = q(A,B)} = F⁻¹({z = q(x,y)})` (3:1 étale) dodge
+units (`c − q` linear in c), u-trap (avoid factors `b−b₀`), and A-trap structurally —
+only the Euler characteristic decides, and it obeys a closed **design calculus**:
+
+> `e(S_q) = 3 − 2·e(V_q) − #deep(q)`, with `V_q = {Λ*(a,b,q)=0}` and deep points
+> `= {3bq=4} ∩ {12a=b²}`.
+
+Three new structural identities power it: **`Λ*` restricted to the deep surface is the
+perfect square `(12a−b²)²/(3b²)`** (so all deep crossings are forcibly tangent — an
+earlier e=1-scan that overcounted them is corrected); **`disc_c(Λ*) = (b²−12a)³`** (a
+perfect cube), whence the Jelonek surface is *rational* with explicit parametrization
+`a = (b²−s²)/12, c = (4/3)(b+2s)/(b+s)²`; and the **`(12a−b²)`-trick**: for
+`q = (12a−b²)h` there are *no deep points at all*, collapsing the design equation to
+`e(V_q) = 1` with `V_q` the explicit plane curve `4(b+2s) + 3(b+s)²s²h = 0`.
+Landscape so far: `e(S_q) ∈ {4,5,6,7,10,13}` over simple q's (vs 103 for the flat-plane
+9:1 generation 4) — close to, but not yet, the target 1. Open: the h-hunt for
+`e(V) = 1`; the Orevkov statement check (a first-level hit is 3-sheeted); and the
+second-level (9:1, Orevkov-free) lift of the calculus.
+
 ## Reproducing
 
 ```
@@ -633,6 +654,7 @@ python3 traphunt_sigma_prime.py       # round 1 fiber computations (conclusion s
 python3 level_set_classification.py   # units kill + u-trap: no coordinate level surface is A^2
 python3 generation4.py                # generation 4 survives all four mechanisms; e(D1) = -1
 python3 euler_sigma4.py               # e(Sigma4) = 103 != 1: generation 4 is NOT A^2
+python3 qprogram.py                   # design calculus: identities, (12a-b^2)-trick, e-landscape
 ```
 
 ## Sources
