@@ -491,6 +491,26 @@ structurally.
 > low-degree combinations) — any reduced irreducible 𝔸¹-fiber with non-𝔸¹ generic
 > fibers kills it; if all dodge, proceed to fibrations, `Cl`, Makar-Limanov, κ̄.
 
+**Trap-hunt round 1: Σ′ survives everything** (`traphunt_sigma_prime.py`). The x=0
+fiber is a punctured conic cover (disc `y⁴(y²+12)`); the u=0 fiber is ℂ* minus 3
+points (poles `(2y³−1)³`); the y=0 and z=0 sections have monomial leading forms
+(`−27x⁶z⁷`, `−59049x¹⁴y²²`) hence *two* places at infinity — never 𝔸¹. The `B∘F`
+base curves are `x(y²−βy+3) + (y−β) = 0` ≅ 𝔸¹ minus the two roots of `q = y²−βy+3`
+(the `(xy+1)²` resultant factor is spurious since `A=1` forces `u ≠ 0`), and the `C∘F`
+base curves are **plane cubics** `−λ(1+v)³ + x(1+v)(v+2) − x³` in `(x, v=xy)` — genus
+1 generically, punctured-rational when degenerate. In every case the unit argument (a
+dominant map `𝔸¹ → line minus a point` is a nonvanishing nonconstant polynomial —
+impossible) excludes 𝔸¹-components from all fibers, for **all** values of the
+parameter.
+
+**Meta-insight.** On Σ′ the equation `A∘F = 1` *activates the units* `u = 1+xy` and
+`1+AB`: they are nonvanishing on Σ′, so every natural base curve is punctured, and
+punctured bases cannot support 𝔸¹-fibers. The same unit-rigidity of 𝔸² that blocks
+naive 2D constructions from below now *protects* the candidate from the AMS trap.
+Σ′ is the strongest surviving object of the campaign: no known theorem and no found
+trap decides it. The positive program (an explicit 𝔸¹-fibration, `Cl`, Makar-Limanov,
+κ̄) is where the question now lives.
+
 **Dichotomy — either resolution is beyond current knowledge:**
 
 > **Σ ≅ 𝔸² ⟺ JC(2) is false** (the 9:1 restriction is then an explicit 9-sheeted
@@ -518,6 +538,7 @@ python3 multisection_2d.py            # multisection reformulation, collision le
 python3 iterated_preimage.py          # Sigma = {B∘F=0}: irreducible, 9:1 etale; the dichotomy
 python3 ams_obstruction.py            # resolution: Sigma (and S1, {B=c}) are NOT A^2
 python3 candidate_sigma_prime.py      # second-generation candidate Sigma' = {A o F = 1}
+python3 traphunt_sigma_prime.py       # round 1: Sigma' survives every AMS trap
 ```
 
 ## Sources
