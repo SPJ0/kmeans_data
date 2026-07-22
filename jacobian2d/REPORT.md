@@ -568,12 +568,30 @@ rather than 𝔸¹:
    (verified `K_t ≡ 1` on Γ); punctured base ⇒ no 𝔸¹-components.
 4. **No A-trap**: the `{A=0}`-fiber splits along `A = u·R₀` — reducible.
 
-**Decisive open test: `e(Σ₄)`** via the two-level deficiency stratification over P.
-First input computed: the first-level deficiency curve `D₁ = {Λ*=0}∩P` is an
-irreducible quartic in (a,b) with **`e(D₁) = 4·(1−6) + 19 = −1`** (six branch values of
-the 4:1 b-projection, 19 fiber points over them, constant leading coefficient). The
-second-level curve `E₄` (elimination pipeline as in §9) and the stratified assembly
-remain: `e(Σ₄) ≠ 1` kills; `e(Σ₄) = 1` escalates to `Cl`/Makar-Limanov/κ̄.
+**Resolved: `e(Σ₄) = 103 ≠ 1 ⟹ Σ₄ ≇ 𝔸²`** (`euler_sigma4.py`) — the **fifth kill
+mechanism**. The computation uses a reusable *A-fibration Euler machinery*: fibering by
+`A = x∘F` makes every fiber the F-preimage of a single curve `γ_ν = {x=ν}∩S_P`, so the
+whole Euler characteristic reduces to one-variable analysis. Structural inputs: the
+cubic `ψ̃ = Λ*x³ + (4−3bc)x − 2c` has **no quadratic term**, so at a deficiency point it
+degenerates straight to linear — one preimage (retro-explaining gen-1's `7 = 3+3+1`) —
+and to zero preimages at *deep* points (`Λ* = 4−3bc = 0`). Generic fiber:
+`e = 3(1−3−10)+10 = −26`. The special values are the roots of exactly three irreducible
+factors (degrees 3, 9, 39, after stripping x-power artifacts), evaluated once each at
+high precision (exact-rational → mpmath; double-precision casts provably corrupt the
+degree-39 factor — the colliding root pair sits at gap ~10⁻⁴⁰):
+
+| stratum | profile | e(fiber) | contribution |
+|---|---|---|---|
+| ν = 0 | p=0, m=4 | −5 | −5 |
+| cubic ×3 | p=2, m=8 (pole-fill absorbs 2 deficiency pts) | −19 | +21 |
+| deg-9 ×9 | p=3, m=9, one deep pt | −25 | +9 |
+| deg-39 ×39 | p=3, m=9, simple collisions | −24 | +78 |
+
+`e(Σ₄) = −26·(−51) − 1223 = 103`. **Design equation** for any future candidate: the
+deficiency corrections must sum to exactly `d−1 = 8`; here they summed to −94 — étale
+covers *accumulate* topology, so a viable candidate needs engineered massive
+cancellation in its Jelonek geometry. (Earlier partial data: `e(D₁) = −1` for the
+first-level deficiency quartic — superseded by the fibration route.)
 
 ## Reproducing
 
@@ -592,6 +610,7 @@ python3 candidate_sigma_prime.py      # second-generation candidate Sigma' = {A 
 python3 traphunt_sigma_prime.py       # round 1 fiber computations (conclusion superseded by 9.3)
 python3 level_set_classification.py   # units kill + u-trap: no coordinate level surface is A^2
 python3 generation4.py                # generation 4 survives all four mechanisms; e(D1) = -1
+python3 euler_sigma4.py               # e(Sigma4) = 103 != 1: generation 4 is NOT A^2
 ```
 
 ## Sources
