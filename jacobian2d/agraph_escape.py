@@ -72,3 +72,23 @@ assert e_S == 3
 print("4. e(S_r) = 3(1-0) + (2-2) = 3: the barrier again  OK")
 print("First-level barrier conjecture: e(F^{-1}(W)) >= 3 for every embedded plane W.")
 print("Next: the second-level (9:1) design, outside the level-1 rigidity.")
+
+
+# ============================================================================
+# ADDENDUM (same session): the deep-free kappa-family and the barrier gap test
+# ============================================================================
+# The barrier-proof attempt exposed a potential gap: the C*-ban theorem needs a
+# THIRD forced unit, present only in the b-graph deep-free family.  The a-graph
+# deep-free family is strictly larger:
+#     r = (b^2 + kappa b^m + (3bc-4) rho)/12,   kappa != 0,
+# is deep-free (the Laurent obstruction h(b) = kappa b^m is zero-free on C*)
+# WITHOUT containing the hyperbola, and there the e(V) = 1 profile is not
+# banned by any proved mechanism.  TESTED (level-curve fibration machinery,
+# c(b) = (12nu - b^2 - kappa b^m + 4rho)/(3 rho b), per-factor exact):
+#     kappa=1,2,-1; m=1,2; rho=1,2  ->  e(S_r) = 15
+#     kappa=1, m=3, rho=1           ->  e(S_r) = 21
+# No sub-3 value: the barrier conjecture survives its sharpest test so far --
+# where its proved mechanisms do not reach, the deficiency topology still
+# defends it.  (A first-level e=1, if it existed, would in any case be
+# Orevkov-blocked from being A^2; its true value would be collapsing the
+# level-2 design target from delta_2 = 8 to 0.)
