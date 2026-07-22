@@ -10,8 +10,8 @@ leaving parameters G0 (scale) and G2 free, with
     det JF = -G0^2/2      (independent of G2!).
 
 G0=2, G2=0 is the announced counterexample (degrees (7,6,4)).
-G0=2, G2=1 (built below) is a NEW counterexample instance, degrees (8,7,5),
-det JF = -2, generically 3-to-1.
+G0=2, G2=1 (built below) has degrees (8,7,5) -- NOTE: later shown to be
+F o (x,y,z-y^2), i.e. the announced map up to a source shear (REPORT 9.5).
 
 Run: python3 family_3d.py
 """
@@ -36,7 +36,7 @@ def build(G0v, G2v):
     C = sp.expand((x*(g - t)).subs(sub))
     return A, B, C
 
-for G0v, G2v, label in [(2, 0, "announced map"), (2, 1, "NEW instance")]:
+for G0v, G2v, label in [(2, 0, "announced map"), (2, 1, "shear-twisted instance")]:
     A, B, C = build(G0v, G2v)
     for f in (A, B, C):
         assert sp.denom(sp.together(f)) == 1     # polynomial
@@ -52,5 +52,5 @@ pt = {x: sp.Rational(1, 3), y: sp.Rational(2, 5), z: sp.Rational(1, 7)}
 tgt = [f.subs(pt) for f in (A, B, C)]
 sols = sp.solve([sp.Eq(A, tgt[0]), sp.Eq(B, tgt[1]), sp.Eq(C, tgt[2])],
                 [x, y, z], dict=True)
-print(f"NEW instance: generic fiber has {len(sols)} points  => non-injective")
+print(f"shear-twisted instance: generic fiber has {len(sols)} points  => non-injective")
 assert len(sols) >= 2

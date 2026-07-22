@@ -16,9 +16,10 @@ determinant has a *square defect* `c·γ²` absorbed by an extra fiber direction
 obstruction equation `W − λ·v^a·W^k = c` (`a ≥ 1, k ≥ 2`). In 3D the same equation
 acquires an extra variable and becomes solvable — that is the whole difference between
 the dimensions. A specification sheet for what any successful 2D construction must
-achieve is given at the end. As a byproduct, the structure equations derived here produce
-a **new counterexample instance** in 3D (degrees (8,7,5), det = −2, generically 3:1),
-distinct from the announced (7,6,4) map.
+achieve is given at the end. A byproduct: the structure equations derived here produce a
+3D Keller family containing an instance of degrees (8,7,5) — **later shown (§9.5) to be
+the announced map composed with the shear (x,y,z) ↦ (x,y,z−y²)**: the derived family
+collapses to F∘Aut, a rigidity statement in its own right.
 
 ---
 
@@ -593,6 +594,27 @@ covers *accumulate* topology, so a viable candidate needs engineered massive
 cancellation in its Jelonek geometry. (Earlier partial data: `e(D₁) = −1` for the
 first-level deficiency quartic — superseded by the fibration route.)
 
+### 9.5 Family collapse: F′ = F∘(x, y, z−y²) — rigidity, and the corrected record
+
+The (8,7,5) family member has **exactly the same fiber cubic** as F (same Λ*, same
+linear and constant coefficients) — suspicious enough to force the question of whether
+it is F in disguise. Degree arithmetic rules out any target-side factorization
+`F′ = T∘F` (weight-2 monomials other than `a` have composed degree > 8), but a
+source-side x-preserving shear fits **exactly**:
+
+> **F′ = F∘T, T = (x, y, z − y²).**
+
+Consequences: (i) the earlier claim that the (8,7,5) instance is a "genuinely new
+counterexample" is **withdrawn** — it is the announced map up to a triangular source
+automorphism; (ii) the derived (G0,G2)-family collapses to `F∘Aut` (G0 is a scaling),
+so — as far as this family sees — there is **one** known 3D counterexample up to
+composition; (iii) all iterated-preimage candidates built from family members are
+isomorphic to candidates built from F itself: the family adds nothing to the design
+equation. The true design space is **curved target surfaces**: automorphism-images of
+planes and beyond, i.e. the *q-program* `Σ_q = {(C − q(A,B))∘F = 0}` (9:1 étale over
+the graph surface `{c = q(a,b)} ≅ 𝔸²`), whose infinitely many coefficients are the
+knobs for the design equation `Σ(corrections) = d − 1`. That is where the hunt
+continues.
 ## Reproducing
 
 ```
