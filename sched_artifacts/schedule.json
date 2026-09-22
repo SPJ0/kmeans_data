@@ -1,0 +1,46 @@
+{
+  "order": [
+    "A",
+    "C",
+    "H",
+    "E",
+    "D",
+    "F",
+    "G",
+    "B"
+  ],
+  "schedule": {
+    "A": {
+      "start": 0,
+      "completion": 7
+    },
+    "C": {
+      "start": 8,
+      "completion": 10
+    },
+    "H": {
+      "start": 10,
+      "completion": 12
+    },
+    "E": {
+      "start": 12,
+      "completion": 16
+    },
+    "D": {
+      "start": 16,
+      "completion": 18
+    },
+    "F": {
+      "start": 18,
+      "completion": 21
+    },
+    "G": {
+      "start": 21,
+      "completion": 26
+    },
+    "B": {
+      "start": 26,
+      "completion": 38
+    }
+  }
+}
