@@ -1,0 +1,76 @@
+{
+  "attempt_id": "S01",
+  "phase": "synthetic",
+  "game": "SYNTH-1",
+  "rep": 0,
+  "manifest_sha256": null,
+  "config": {
+    "config_version": "v1",
+    "model": "claude-opus-5-5",
+    "effort": "xhigh",
+    "permission_mode": "auto",
+    "permission_prompts": "none",
+    "attempt_seconds": 300.0,
+    "player_continuations": 2,
+    "infra_continuations": 3,
+    "harness_resumes": 2,
+    "bookkeeping_grace_s": 120.0,
+    "relay_ready_wait_s": 90.0,
+    "session_model_name": "claude-code-vanilla-baseline",
+    "webfetch_deny": [
+      "WebFetch(domain:digbench.ai)",
+      "WebFetch(domain:api.digbench.ai)",
+      "WebFetch(domain:www.digbench.ai)"
+    ]
+  },
+  "server": "http://127.0.0.1:40183",
+  "synthetic": true,
+  "claude_cli_version": "2.1.280 (Claude Code)",
+  "template_sha256": "64b0b4cc2350b1cb39ec8d02c205427a7f944608a335d9f59ab276285a18e412",
+  "claude_session_id": "4be915c8-a025-4d98-abb5-3cce45d61e24",
+  "sandbox_key": "S01-f5921cb5",
+  "host": {
+    "nproc": 4,
+    "concurrency_slot": 0,
+    "hostname": "vm"
+  },
+  "created_wall": "2026-09-23T17:58:31.877+00:00",
+  "session_id": "15696870-09cc-4e22-886a-25d552511ddb",
+  "seed": 12345,
+  "framework_version": "synthetic-0",
+  "clock_start_wall": "2026-09-23T17:58:32.891+00:00",
+  "deadline_wall": "2026-09-23T18:03:32.891+00:00",
+  "prompt_sha256": "1125f07dcc3096e35bbd17dc16c83d419e71ec1c8728ab36eaed7b4492eba60a",
+  "stop_reason": "completed",
+  "counts": {
+    "player_continuations": 0,
+    "infra_continuations": 0,
+    "resumes": 0,
+    "turns": 1
+  },
+  "finished_wall": "2026-09-23T17:58:46.045+00:00",
+  "reported_models_at_init": [
+    "claude-opus-5-5"
+  ],
+  "artifacts": {
+    "copied_file_counts": {
+      "work": 0,
+      "claude_projects": 1
+    },
+    "redaction_hits": 0
+  },
+  "terminal_t": 9.805,
+  "final_state": {
+    "observation": "[·····@]",
+    "level": 3,
+    "max_level": 3,
+    "lives_left": 3,
+    "steps_remaining": 3,
+    "status": "completed",
+    "done": true,
+    "actions": [],
+    "transition": null,
+    "mode": "survival",
+    "creative_toggle": "/"
+  }
+}

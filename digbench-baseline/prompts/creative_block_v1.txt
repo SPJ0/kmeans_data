@@ -1,0 +1,7 @@
+
+Important: creative mode
+At nearly any time, you can use a button to switch into “creative mode”, where you can experiment safely without losing steps or lives.
+It may be necessary to use creative mode in order to discover the rules of the game without running out of steps.
+Call `make_move` with action {toggle} to enter creative mode.
+Call `make_move` with action {toggle} again to return to survival mode.
+Only submit {toggle} when it appears in the state’s `legal_actions` list.

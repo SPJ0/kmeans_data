@@ -1,0 +1,5 @@
+The assigned game remains in progress. The current permitted observation and remaining time follow. Continue with the assigned tools, or explicitly state that you are stopping unresolved.
+
+{state_text}
+
+Time remaining: {remaining_min} minutes (deadline {deadline_wall} UTC).

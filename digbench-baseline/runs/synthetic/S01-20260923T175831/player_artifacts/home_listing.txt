@@ -1,0 +1,17 @@
+.cache/claude-cli-nodejs/-srv-dig-S01-f5921cb5-home-work/mcp-logs-game/2026-09-23T17-58-32-843Z.jsonl
+.claude/.claude.json
+.claude/.last-cleanup
+.claude/backups/.claude.json.backup.1790186312335
+.claude/policy-limits.json
+.claude/policy-limits.json.stamp.json
+.claude/projects/-srv-dig-S01-f5921cb5-home-work/4be915c8-a025-4d98-abb5-3cce45d61e24.jsonl
+.claude/remote-settings.json
+.claude/sessions/1.5cbe1e8c8b4d26c6177292c0d3d46a6ffcc437db3d174f3f36c971521f33a547.key
+.claude/sessions/1.json
+.claude/shell-snapshots/snapshot-bash-1790186316618-30vjb0.sh
+.gametool/ca-bundle.crt
+.gametool/ctl.sock
+.gametool/mcp.json
+.gametool/relay.py
+.gametool/settings.json
+bin/game
