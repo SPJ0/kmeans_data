@@ -8,3 +8,4 @@ matplotlib
 pytest
 lxml
 beautifulsoup4
+reportlab
