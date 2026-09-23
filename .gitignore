@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+data/raw/yahoo_daily/
+data/raw/yahoo_1h/
+data/panel/
