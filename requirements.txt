@@ -1,0 +1,10 @@
+pandas>=2.2
+numpy
+pyarrow
+yfinance
+requests
+statsmodels
+matplotlib
+pytest
+lxml
+beautifulsoup4

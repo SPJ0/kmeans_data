@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# raw HTTP response cache (large, regenerable); compact parquet caches under data/ are committed
+data/raw/http/
+data/raw/nport_zip/
+# per-ticker price cache (consolidated copy committed as data/cache/prices_snapshot.parquet)
+data/cache/prices/
+# full N-PORT holdings extracts (slim universe copy committed as nport_holdings_universe.parquet)
+data/cache/nport/holdings_*.parquet
+# derived panel (rebuild with python -m flows.build_panel)
+data/cache/stock_days.parquet
+data/raw/sec/series_class_*.csv
+*.log
+data/*.txt
+data/raw/lists/*.html

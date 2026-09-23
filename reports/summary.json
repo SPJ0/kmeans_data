@@ -1,0 +1,56 @@
+{
+  "notes": {
+    "rows_raw": 2090727,
+    "rows_in_window": 1670771,
+    "after_bad_print_filter": 1669638,
+    "after_liquidity_history_filter": 1658765,
+    "earnings_window_rows_dropped": 113091,
+    "tickers_without_earnings_dates": [
+      "CRML"
+    ],
+    "rows_final": 1545674,
+    "treated_rows": 53526,
+    "treated_stocks": 237
+  },
+  "top_decile_cut_absFR": 0.10495641514317676,
+  "matched_placebo": {
+    "rev_treated": {
+      "mean": 9.723859880421536,
+      "se": 5.649717907827013,
+      "t": 1.7211230788974936,
+      "n": 5353,
+      "n_clusters": 587
+    },
+    "rev_match": {
+      "mean": -5.231798820935433,
+      "se": 5.42706081321987,
+      "t": -0.9640206736197252,
+      "n": 5353,
+      "n_clusters": 587
+    },
+    "diff": {
+      "mean": 14.955658701356962,
+      "se": 6.842334379676522,
+      "t": 2.1857538482449907,
+      "n": 5353,
+      "n_clusters": 587
+    },
+    "diff_cc": {
+      "mean": 21.085837597597962,
+      "se": 15.456123195677176,
+      "t": 1.3642384529838196,
+      "n": 5353,
+      "n_clusters": 587
+    }
+  },
+  "FR_winsor_bounds": [
+    -0.45921230918223144,
+    0.5293578487272791
+  ],
+  "trade_stats": {
+    "trades": 6561,
+    "avg_gross_bps_per_trade_sizeweighted": 3.726935434108009,
+    "avg_cost_bps_halfspread+2": 4.939090259403841,
+    "median_assumed_half_spread_bps": 1.0
+  }
+}
