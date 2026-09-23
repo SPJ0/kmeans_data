@@ -292,14 +292,17 @@ def run_attempt(a) -> dict:
     log.write("relay_ready", ready=ready)
 
     # 3. Dispatch: the clock starts when the complete prompt + first permitted state is sent.
+    # Everything except the two timestamps is rendered first, so the clock covers only formatting
+    # of those timestamps and the write to the player's stdin.
+    template = render_prompt(a.game, paths["work"], "{start_wall}", "{deadline_wall}",
+                             ctl.start.get("description", ""), ctl.state)
     t0, start_wall = ctl.start_clock()
     deadline_wall = (datetime.fromisoformat(start_wall) + timedelta(seconds=a.attempt_seconds)).isoformat(timespec="milliseconds")
-    prompt = render_prompt(a.game, paths["work"], start_wall, deadline_wall,
-                           ctl.start.get("description", ""), ctl.state)
+    prompt = template.replace("{start_wall}", start_wall, 1).replace("{deadline_wall}", deadline_wall, 1)
+    player.send(prompt, "initial")
     with open(os.path.join(run_dir, "prompt.txt"), "w", encoding="utf-8") as f:
         f.write(prompt)
     meta.update(clock_start_wall=start_wall, deadline_wall=deadline_wall, prompt_sha256=sha256_text(prompt))
-    player.send(prompt, "initial")
 
     # 4. Conversation loop under the fixed continuation/incident policy.
     stop_reason = None
@@ -390,9 +393,11 @@ def run_attempt(a) -> dict:
             stop_reason = "infrastructure_harness_exit"
             break
 
-    ctl.close(stop_reason or "unknown")
+    # Kill first: close() waits for any in-flight HTTP step (up to its timeout); the player must not
+    # keep running meanwhile. The late response, if any, is still logged before the log closes.
     player.kill()
     egress.stop()
+    ctl.close(stop_reason or "unknown")
     log.write("player_killed", stop_reason=stop_reason)
     return finish(meta, run_dir, log, ctl, stop_reason, counts, paths, [token, cap], init_models)
 

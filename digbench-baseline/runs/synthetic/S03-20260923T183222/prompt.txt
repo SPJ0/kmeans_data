@@ -1,0 +1,73 @@
+You are playing one assigned interactive text game. Your objective is to complete it and otherwise advance as far as possible within its rules and the time available.
+
+The official task description, current observation, and game interface are supplied below. Discover how the game works through interaction. You may use your ordinary local tools, create programs or working files, and retain your normal conversation history.
+
+Use the assigned game tool for all game actions. Submit only actions permitted by the current state. Do not create other game sessions, inspect hidden state or implementation, look up game-specific rules or solutions, consult other players' work, or obtain gameplay advice from the manager. Generic documentation for your ordinary programming tools is allowed.
+
+You have up to 60 minutes from the controller's recorded start time. This is a maximum, not a minimum. Tool use, computation, and other work all use that same allowance. The game also has its own rules and limits. The controller enforces your deadline.
+
+Continue until the game ends, time expires, you encounter a blocking interface failure, or you decide to stop unresolved. A level failure is not necessarily the end of the game. Use the current state to determine what is still permitted.
+
+Do not claim victory unless the server reports completion. Your final prose is not the source of the score.
+
+When finished, give a brief factual report of the server outcome, current progress, saved artifact paths, and any unresolved interface problems. No special note-taking, reflection procedure, or reasoning format is required.
+
+=== Official gameplay instructions ===
+
+We are not going to tell you the rules of this game—you have to figure them out for yourself.
+
+Levels, lives and steps:
+• The aim is to reach as high a level as possible. For each level you reach you will be awarded a bonus.
+• You advance levels by reaching certain states within the game. You will have to figure out what these are.
+• Within each level, you have a limited number of steps. If you run out of steps, you lose a life. If you lose all your lives, the game is over.
+• It is also possible to lose a life by reaching certain states within the game.
+
+Important: creative mode
+At nearly any time, you can use a button to switch into “creative mode”, where you can experiment safely without losing steps or lives.
+It may be necessary to use creative mode in order to discover the rules of the game without running out of steps.
+Call `make_move` with action "/" to enter creative mode.
+Call `make_move` with action "/" again to return to survival mode.
+Only submit "/" when it appears in the state’s `legal_actions` list.
+
+=== Game tool ===
+
+Your game session is ALREADY started for you. You do NOT start or choose a game. Your tools are scoped to this one session; the controller supplies the session id and step index for you.
+
+• MCP tool `make_move` (argument `action`): submit EXACTLY ONE action from the current state's `legal_actions`. It returns the resulting state.
+• MCP tool `get_state`: re-read the current state without taking an action.
+• MCP tool `stop_attempt` (argument `reason`): declare that you are stopping this attempt unresolved. This permanently closes the game for this attempt.
+• The same operations are available from the shell as `game move ACTION`, `game state` and `game stop REASON` (the `game` command is on your PATH), so programs you write may call them. Every route acts on the same single session, and actions are applied one at a time in the order received.
+
+Each turn, read the current state and reason from these fields: `observation` (the rendered screen), `level`, `max_level`, `lives_left`, `steps_remaining`, `status`, `done`, the `legal_actions` list (your legal moves), and `mode`/`creative_toggle`/`transition` when present. Move results also report `invalid_action`, and every tool result reports the controller's `elapsed_s` and `time_remaining_s`. Infer what each action does from how the state changes, and build on what you learn across turns. Keep playing until the state's `done` is true (status `game_over` or `completed`).
+
+=== Your assignment ===
+
+Game: SYNTH-1
+Working directory: /srv/dig/S03-623448e7/home/work
+Controller start time (UTC): 2026-09-23T18:32:24.045+00:00
+Deadline (UTC): 2026-09-23T18:37:24.045+00:00 (60 minutes after the start time)
+
+TASK DESCRIPTION (objective + any special actions, NOT the rules):
+SYNTHETIC test game: reach the star.
+
+INITIAL STATE:
+observation (rendered):
+[@··★]
+
+state:
+{
+  "observation": "[@··★]",
+  "level": 1,
+  "max_level": 4,
+  "lives_left": 3,
+  "steps_remaining": 8,
+  "status": "in_progress",
+  "done": false,
+  "legal_actions": [
+    "l",
+    "r",
+    "/"
+  ],
+  "mode": "survival",
+  "creative_toggle": "/"
+}

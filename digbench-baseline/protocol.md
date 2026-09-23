@@ -38,11 +38,17 @@ No model-call, token, cost or action ceilings are set; the games' own step and l
 - **Controller.** `controller/runner.py` runs one attempt per process, manager side and outside the sandbox. It creates exactly one server session (`POST /api/agent/sessions`, `model_name=claude-code-vanilla-baseline`, `model_version=claude-opus-5-5`) before the clock starts, and the manager does not look at the game state.
 - **Player home.** Each attempt gets a fresh directory `/srv/dig/<attempt>-<random>/home` containing only `work/` (cwd), an empty `.claude/` config dir, and `.gametool/`: relay, network bridge, public proxy CA certificate, MCP config, settings. `bin/game` is a CLI wrapper. The directory is deleted after artifacts are collected.
 - **Sandbox** (`controller/sandbox.py`). The player runs with private PID, mount and network namespaces and all capabilities dropped (`setpriv --no-new-privs --bounding-set=-all --inh-caps=-all`), under `env -i` with an allowlisted environment.
-- **Masked paths.** tmpfs masks cover `/home/user` (this repo), `/root` (manager Claude transcripts), `/tmp` (manager scratchpad), `/var/tmp`, `/dev/shm`, `/mnt/user-data` and `/srv/dig`, with only the attempt's own directory mounted back.
+- **Masked paths.** tmpfs masks cover `/home/user` (this repo), `/root` (manager Claude transcripts), `/tmp` (manager scratchpad), `/var/tmp`, `/mnt/user-data`, `/home/claude` and `/srv/dig`. Only the attempt's own directory is mounted back under `/srv/dig`. Under `/home/claude`, only the harness's own model-login file comes back, read-only; the container's session-ingress token, launcher settings and hooks stay hidden.
+- **Other hardening** (added before any live run after the independent code audit):
+  - a minimal `/dev` (null, zero, full, random, urandom, tty, a private devpts and shm) with **no block devices**, so the raw disk cannot be read around the masks;
+  - a **read-only root filesystem** in the player's namespace, so no attempt can leave files for a later one; writable locations are the attempt directory, `/tmp`, `/var/tmp`, `/dev/shm` and the empty masked dirs;
+  - read-only `/sys` and `/proc/sys`;
+  - private IPC and UTS namespaces.
 - **Why uid 0.** The player is uid 0 because the harness's own model credential in this container is root-readable only and the manager does not copy it. Isolation therefore rests on namespaces and dropped capabilities, and the probes in §9 verify it.
+- **Residual exposure.** As in any ordinary Claude Code install, the player can read its own model login file.
 - **Network.** The namespace has no route out. A capability-less bridge inside it forwards `127.0.0.1:3128` to the manager's egress filter (`controller/netfilter.py`). The filter:
   - accepts HTTP CONNECT only;
-  - refuses `*.digbench.ai`;
+  - refuses `*.digbench.ai` and IP-literal targets (which would sidestep name matching);
   - forwards everything else the way this container ordinarily would (NO_PROXY hosts directly, the rest via the container's egress proxy);
   - logs every destination host to the trusted log.
 
@@ -76,7 +82,8 @@ No model-call, token, cost or action ceilings are set; the games' own step and l
 ## 6. Timing and stopping
 
 - **Clock start.** Before dispatch, the controller waits up to 90 s for the harness to start its MCP game server. The monotonic clock starts at dispatch of the complete initial prompt with the first permitted state, and wall-clock UTC is recorded too. Setup and queue time are not player time. Model latency, local computation, tool use, rate-limit waits and retries all count.
-- **Deadline** (t = 3600 s). The gate closes: no further server requests are sent, and any tool call answers "closed". The player's namespace is SIGKILLed (all descendants die). Artifacts are then collected. There is no post-deadline bookkeeping grace.
+- **Deadline** (t = 3600 s). The gate closes without waiting on any in-flight request: no further server requests are sent, and any tool call answers "closed". The player's namespace is SIGKILLed at once (all descendants die), before the controller waits for any in-flight HTTP response, which is then logged as late. Artifacts are then collected. There is no post-deadline bookkeeping grace.
+- **Clock precision.** The prompt is rendered before the clock starts, so the clock covers only inserting the timestamps and the write to the player's stdin.
 - **Late responses.** A step sent before the deadline whose response arrives after it is logged as `late` and never contributes to the score.
 - **Terminal outcomes.**
   - The game ends early on server `status == "completed"` or `"game_over"`, or when the player calls `stop_attempt`. The gate closes at once and the terminal time is the server response time.
@@ -131,7 +138,15 @@ No model-call, token, cost or action ceilings are set; the games' own step and l
   - grader guards: claimed win ignored, synthetic run rejected, manifest mismatch, duplicate session and impossible transition flags;
   - relay: MCP and CLI;
   - runner policy with a scripted player: continuation and decline, two continuations, resume after exit, deadline kill of a SIGTERM-ignoring tree with a detached child;
-  - sandbox probes: markers in the manager, scratchpad, sibling and shared locations are invisible; no capabilities; private PID view; masks cannot be removed; no raw egress; benchmark hosts refused.
+  - sandbox probes:
+    - markers in the manager, scratchpad, sibling, shared and `/home/claude` locations are invisible;
+    - no capabilities and a private PID view;
+    - masks cannot be removed;
+    - no block devices and no raw-disk read;
+    - the root filesystem and `/proc/sys` are read-only, while the home directory and `/tmp` are writable;
+    - the session-ingress token and launcher settings are hidden, and the harness login is present but read-only;
+    - no raw egress and no direct upstream-proxy access;
+    - benchmark hosts and IP literals are refused, and pypi is reachable through the filter.
 - **Synthetic real-model runs** (runs/synthetic, excluded): a real sandboxed player completed the fixture game through MCP.
 - **Smoke test.** An excluded P-1 run of at most 10 minutes on the live service, followed by a live contract audit on that session only: `GET /games` IDs, the `GET /sessions/{id}` route, idempotent replay of an applied index, and the stale-index code.
 

@@ -1,0 +1,83 @@
+{
+  "attempt_id": "S03",
+  "phase": "synthetic",
+  "game": "SYNTH-1",
+  "rep": 0,
+  "manifest_sha256": null,
+  "config": {
+    "config_version": "v1",
+    "model": "claude-opus-5-5",
+    "effort": "xhigh",
+    "permission_mode": "auto",
+    "permission_prompts": "none",
+    "attempt_seconds": 300.0,
+    "player_continuations": 2,
+    "infra_continuations": 3,
+    "harness_resumes": 2,
+    "bookkeeping_grace_s": 120.0,
+    "relay_ready_wait_s": 90.0,
+    "session_model_name": "claude-code-vanilla-baseline",
+    "disallowed_tools": [
+      "RemoteTrigger",
+      "PushNotification",
+      "SendMessage",
+      "ListAgents",
+      "DesignSync"
+    ],
+    "webfetch_deny": [
+      "WebFetch(domain:digbench.ai)",
+      "WebFetch(domain:api.digbench.ai)",
+      "WebFetch(domain:www.digbench.ai)"
+    ]
+  },
+  "server": "http://127.0.0.1:38833",
+  "synthetic": true,
+  "claude_cli_version": "2.1.280 (Claude Code)",
+  "template_sha256": "64b0b4cc2350b1cb39ec8d02c205427a7f944608a335d9f59ab276285a18e412",
+  "claude_session_id": "df118934-9445-4e77-bbb0-8894d9b2466a",
+  "sandbox_key": "S03-623448e7",
+  "host": {
+    "nproc": 4,
+    "concurrency_slot": 0,
+    "hostname": "vm"
+  },
+  "created_wall": "2026-09-23T18:32:22.898+00:00",
+  "session_id": "fbe0afae-8041-4038-88a4-07867ad70852",
+  "seed": 12345,
+  "framework_version": "synthetic-0",
+  "clock_start_wall": "2026-09-23T18:32:24.045+00:00",
+  "deadline_wall": "2026-09-23T18:37:24.045+00:00",
+  "prompt_sha256": "beba7d27974bf201ee17d4971b0c8864c19aa2c6e8cc683193345d5446fbbd08",
+  "stop_reason": "completed",
+  "counts": {
+    "player_continuations": 0,
+    "infra_continuations": 0,
+    "resumes": 0,
+    "turns": 1
+  },
+  "finished_wall": "2026-09-23T18:32:44.398+00:00",
+  "reported_models_at_init": [
+    "claude-opus-5-5"
+  ],
+  "artifacts": {
+    "copied_file_counts": {
+      "work": 0,
+      "claude_projects": 1
+    },
+    "redaction_hits": 0
+  },
+  "terminal_t": 16.666,
+  "final_state": {
+    "observation": "[······@]",
+    "level": 4,
+    "max_level": 4,
+    "lives_left": 3,
+    "steps_remaining": 2,
+    "status": "completed",
+    "done": true,
+    "actions": [],
+    "transition": null,
+    "mode": "survival",
+    "creative_toggle": "/"
+  }
+}

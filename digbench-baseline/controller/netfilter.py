@@ -3,13 +3,15 @@
 The player's network namespace has no route anywhere. Its only egress is 127.0.0.1:3128 inside
 the namespace, which netbridge.py forwards to this filter's unix socket. The filter accepts HTTP
 CONNECT only, refuses the benchmark's own hosts (so players cannot browse benchmark pages or reach
-the game API with another session), and otherwise forwards exactly as this container's ordinary
+the game API with another session) and IP-literal targets (which would sidestep name matching),
+and otherwise forwards exactly as this container's ordinary
 networking would: hosts on NO_PROXY directly, everything else through the container's egress
 proxy. Every destination is logged to the attempt's trusted log.
 """
 
 from __future__ import annotations
 
+import ipaddress
 import os
 import select
 import socket
@@ -34,8 +36,17 @@ def _host_matches(host: str, patterns: list[str]) -> bool:
     return False
 
 
+def is_ip_literal(host: str) -> bool:
+    try:
+        ipaddress.ip_address(host.strip("[]"))
+        return True
+    except ValueError:
+        return False
+
+
 def denied(host: str) -> bool:
-    return _host_matches(host, list(DENY_SUFFIXES))
+    """Benchmark hosts by name, and any IP-literal target (which would sidestep name matching)."""
+    return is_ip_literal(host) or _host_matches(host, list(DENY_SUFFIXES))
 
 
 class EgressFilter:
@@ -97,7 +108,8 @@ class EgressFilter:
             host = host.strip("[]")
             port = int(port) if port.isdigit() else 443
             if denied(host):
-                self.log("egress", host=host, port=port, decision="denied_benchmark_host")
+                self.log("egress", host=host, port=port,
+                         decision="denied_ip_literal" if is_ip_literal(host) else "denied_benchmark_host")
                 c.sendall(b"HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\n\r\n")
                 return
             route = "direct" if (self.upstream is None or _host_matches(host, self.no_proxy)) else "upstream"
