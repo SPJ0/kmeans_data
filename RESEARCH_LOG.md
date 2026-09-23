@@ -144,9 +144,18 @@ concentration of pressure at the close.
   high-turnover names than the market-wide ~10%. The proxy is probably biased *across* exactly
   the stocks we compare. Primary normalization should be Flow/ADV (where no fraction needs to be
   assumed), with the auction-share version as a variant once real close prints are available.
-- **Market context figures** ($50B/day record, 600+ funds, $41–42B AUM, >$2B MSTR days):
-  see verification table. My own training data ends before mid-2026, so I can't confirm the
-  2026 numbers from memory.
+- **"600+ funds, $41–42B"** counts the whole single-stock channel, options-income funds
+  included. Leveraged plus inverse is about **488 funds / $34B**. Half of all leveraged ETFs have under $7M,
+  and 63 single-stock leveraged ETFs closed in 2026. The tail is mostly dust.
+- **"$50B/day record"** is a peak on some days (Bloomberg's Simon White), mostly index funds, not
+  a daily run-rate. A Barclays figure puts the 10-day average near $20B/day.
+- **Exit "in the opening cross" and fills "at aggressively favorable prices"**: Nasdaq IO buys
+  are repriced to the Nasdaq best bid (sells to the best offer), so "aggressive" is bounded by
+  the book at 4:00. MOC entry on Nasdaq runs to **3:55**, not 3:50. IBKR has an `ImbalanceOnly`
+  API flag (Nasdaq), but **no documented NYSE Closing Offset support**.
+- **Leverage menu**: no 3x single-stock ETFs exist in the US. Rule 18f-4 caps them at about 2x, and the SEC
+  pushed back on 3x/5x filings in Dec 2025 and Mar 2026. So the universe is L ∈ {1.25, 1.5,
+  1.75, 2, −1, −1.5, −2}, and the multipliers that matter are 2 (2x, −1x) and 6 (−2x).
 - **Flow math**: correct. Verified algebraically and in unit tests (`tests/test_rebalance.py`).
   One addition: L=1.25 and 1.5 funds have tiny multipliers (0.31, 0.75), so they barely
   matter. L=1.75 (1.31) matters for MSTX's history.
@@ -157,13 +166,78 @@ concentration of pressure at the close.
    reversal." Keep matched placebos as secondary.
 2. Add **index-LETF flow allocated by index weight** as a flow component for constituents.
 3. Treat **"momentum into the close"** as a co-equal hypothesis, not a fallback. The
-   event study runs first, before any P&L sim.
+   event study runs first, before any P&L sim. Frame the baseline as an out-of-sample
+   replication of Barbon et al. on 2024–26 single-stock funds, and check whether the effect scales with
+   Flow/ADV the way their index-era estimates imply.
 4. Start the **cheap live recorders now** (IBKR closing imbalance 3:50–4:00, daily issuer
    holdings/AUM archive). The historical free data is thin and the sweet-spot names are
    young, so every day of real E and real imbalance collected now is worth more than any
    backfill.
 5. Budget flag: a clean answer probably needs **official auction prints and imbalance history**
    (Databento). I won't spend without asking, but I expect to ask after the free-data baseline.
+
+### Verification (2026-09-23)
+
+Three web research passes. Items marked † were only seen in search excerpts or secondary
+coverage (paywall or 403), not read in full.
+
+**Market / regulatory**
+
+| Claim | Verdict | Source |
+| --- | --- | --- |
+| $50B/day rebalancing record mid-2026, 4x start of year | Peak on "some days", not typical† | Benzinga Jul 2026 citing Bloomberg (S. White)† |
+| 600+ funds, 18 issuers, $41–42B | Channel-wide; LETF ≈ 488 funds / $34B | ETF Action 17 Sep 2026; Reuters 25 Aug 2026 |
+| First US single-stock LETFs | 14 Jul 2022 (AXS) | AXS press release |
+| MSTR LETF flows > $2B on single days, Nov 2024 | Confirmed | CoinDesk on JPMorgan note, 5 Dec 2024 |
+| MSTR swap-capacity squeeze | Confirmed: MSTU was offered $20–50M of swaps vs ~$1.3B needed, so it used calls. MSTX 1.75x → 2x on 29 Oct 2024 | MSTU N-CSRS; MSTX 497 supplement |
+| 3x single-stock funds | None in the US. 18f-4 VaR limit; SEC letters 2 Dec 2025 | SEC letter; Daily Upside Aug 2026 |
+
+**Swap structure.** TSLL uses TRS with BNP, GS, Nomura, BofA, Citi and others, at SOFR + 3.7–4.5%. NVDL uses
+mainly Cowen. MSTU (Feb 2025) had $1.87B of swaps on $0.97B of assets with Cantor, Marex and Clear Street,
+at financing of **overnight bank rate + 1,500 to 10,000 bps**, which shows how scarce MSTR
+swap capacity was. **No public document states whether notional changes are priced at the
+close or at the dealer's execution price** (that is in private ISDA terms). The funds only say
+they rebalance "at the close." So whether the dealer's hedge is an MOC order is empirical (A2).
+
+**Literature** (all pre-date our sample unless noted)
+- Cheng & Madhavan 2009; Tuzun 2013: the flow exists and is concentrated near the close.
+- Ivanov & Lenkey 2018 (index LETFs, 2006–14): creations and redemptions **largely offset** rebalancing,
+  and the net late-day effect is economically insignificant. This is the strongest prior against us.
+- Shum et al. 2016: end-of-day volatility rises with rebalancing demand relative to volume,
+  especially on volatile days.
+- Baltussen–Da–Lammers–Martens 2021: last-30-minute momentum from short-gamma hedging, which reverts
+  over the following days.
+- Barbon–Beckmeyer–Buraschi–Moerke (SSRN 3925725): **individual stocks**. LETF demand produces
+  last-30-minute momentum that **reverses at the next day's open**. This is the closest existing test of our
+  hypothesis, so we should replicate it and ask what's left after its publication.
+- Zhao, "Preying on Leveraged ETFs" (arXiv, Aug 2026)†: speculators front-run the close
+  rebalance, then sell into it. About 75% of the first-day move reverses by the next close (Korea).
+  This supports the mechanism, but it also tells us who's already on the other side.
+- Lenkey 2024 survey†: effects are statistically significant but economically small.
+
+**Implication.** Published evidence says the move happens *into* the close and reverts
+overnight, so the proposed trade has the sign right. It also says the effect is known.
+Our incremental claim has to be about **2024–26 single-stock scale**, where flows relative
+to liquidity are far larger than in the index-LETF samples those papers used.
+
+**Data availability (drives the asset-history plan)**
+- **N-PORT:** only fiscal-quarter-end reports are public (about a 60-day lag), and the monthly-public
+  amendments are delayed to 2027–28. Each quarterly filing does include **monthly flows
+  (sales/redemptions for all three months) and monthly returns**, so month-end AUM can be
+  rebuilt. Swap notionals give actual E at quarter-end. Pull per-filing XML via EDGAR full-text
+  search, not the ~450 MB zips.
+- **Daily AUM free:** GraniteShares (NVDL, CONL, PTIR, AMDL…) via its NAV-history API, and
+  ProShares via `historical_nav.csv` (53 MB, with shares outstanding and AUM for all funds).
+- **No daily history:** Direxion (TSLL, the largest), Defiance, T-Rex/REX, Tradr, Leverage
+  Shares. Current-day holdings only, so start archiving now. `direxion.com/holdings/TSLL.csv`
+  is curl-accessible.
+- **yfinance:** `get_shares_full` returns nothing for ETFs; `.info` gives only the current value.
+- **Survivorship:** the SEC's yearly investment-company series/class CSVs (2023–26) plus N-PORT series
+  names include closed funds. `company_tickers_mf.json` has current tickers only.
+- **Consequence:** daily Gamma will be exact for GraniteShares/ProShares funds, month-end-anchored
+  and interpolated for the rest. Since flow = Gamma × r_t and r_t dominates day-to-day
+  variation, a few % error in Gamma matters much less than getting E right in episodes
+  like Nov 2024. Assumption #4 (restrict to exact-AUM funds) is a natural robustness split.
 
 ### Sizing check (2026-09-23, descriptive only)
 
