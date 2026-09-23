@@ -1,0 +1,7 @@
+test,sample,n,n_names,n_dates,excess_bps,se
+anticipation 13:30->close,real (treated days),1281,45,386,18.76756344495849,7.754508167401914
+anticipation 13:30->close,"placebo (pre-launch days, fake gamma)",440,26,283,13.825579019877216,13.367663308354834
+reversal on1_x_w,real (treated days),2939,65,470,18.502641131411956,6.835640420340416
+reversal on1_x_w,"placebo (pre-launch days, fake gamma)",1652,45,698,-20.17164740713706,11.339912712380006
+reversal cc1_x_w,real (treated days),2939,65,470,1.0330883513304439,17.702467998788705
+reversal cc1_x_w,"placebo (pre-launch days, fake gamma)",1652,45,698,-24.08897498414371,19.37451581512121

@@ -1,7 +1,7 @@
 # Research Log — Auction-Flow Strategies
 
 Newest entries at the bottom. Each entry: what was tried, why, result, what was learned.
-Variant counter (for multiple-testing discount): **0 outcome-bearing tests run so far.**
+Variant counter (for multiple-testing discount): **~34 outcome-bearing tests run so far** (as of 2026-09-23, see entries below).
 
 ## Ground rules (fixed 2026-09-23, before any outcome data was examined)
 
@@ -311,3 +311,70 @@ with **hold-out masking enforced in code**: any outcome whose window reaches 202
 Flow = Gamma × r_t with Gamma = Σ A_{t−1} L(L−1) (known before the open).
 Earnings days ±1 excluded for treated names (Yahoo calendar; after-close reports assigned to
 the next session).
+
+---
+
+## 2026-09-23 — Baseline (Phase A1) and first iteration
+
+All in-sample (t ≤ 2026-03-19); hold-out untouched. Beta-adjusted with QQQ (60-day, lagged).
+Treated stock-days ≈ 29.8k (2022-07 → 2026-03), earnings ±1 day excluded.
+Tests run in this entry: ~34 (listed below). Treat any single t-stat accordingly.
+
+### 1. Pre-registered primary spec (overnight / next-close reversal)
+`on1_x`, `cc1_x` ~ flow/ADV20 + r_t + |r_t| + r_t·vol60, date FE, 2-way clustered (date, stock),
+full cross-section (3,007 stocks):
+- overnight: coef −0.065 per ADV of flow, **t = −1.8**
+- close→next close: +0.011, **t = 0.1**; open→close t+1: +0.079, t = 1.0; 5-day: t = −0.1
+→ **Fails.** Nothing reverses by the next close.
+
+### 2. Variants on the reversal
+- Within-stock (stock-specific r_t slopes, treated names only): overnight **t = −3.9**; next close t = −0.7.
+  Survives dropping the top-10 dates (t = −3.1) and crypto-linked names (t = −2.9).
+  But the magnitude is tiny: 1–2 bps at a typical top-decile flow (1–2% of ADV).
+- Top-decile |flow| vs same-date untreated stocks matched on sign and |r_t|/vol60:
+  overnight excess **+19.7 bps (t ≈ 2.9)**, but:
+  - asymmetric: down days +34 bps, up days +4;
+  - by year: 2024 −1, 2025 +14, 2026 +38 (54 dates);
+  - **72–86% of the total comes from the top 10 dates**; excluding them: **+5.8 ± 5.5 bps**;
+  - top dates are theme-wide sell-offs in crypto/AI-infra names (COIN, BMNR, CRCL, CLSK, IREN,
+    APLD), i.e. a factor QQQ-beta doesn't hedge;
+  - next close: +3 bps (t ≈ 0.2).
+- Pre-launch placebo (same stocks before any LETF existed, fake gamma = their later gamma):
+  overnight −20 bps (continuation) vs +19 real. Supports *some* LETF-specific overnight effect,
+  but the pre-launch window is earlier (2022–24 regime) and next-close is indistinguishable.
+- **Caveat:** "overnight reversal then next-day continuation" is also the signature of noisy
+  opening prints; Yahoo's open is not the official opening cross price.
+
+### 3. Where is the pressure? (hourly event study, Oct 2023 →; `reports/event_study_hourly.png`)
+Top 5% |flow predicted at 15:30| (1,287 events, 45 names) vs same-size moves in low-gamma names:
+- 13:30→15:30: +80 bps in the flow direction vs +40 (excess **+40 bps**)
+- 15:30→close: **no excess**. Overnight dip ~−19 bps, fully recovered on t+1; t+1 close +50 bps excess.
+- **The close is not the extreme; the pressure builds from early afternoon.** (Handoff assumptions #1/#2.)
+- Pressure regression (15:30→close on flow at 15:30): t = −0.3.
+  **Correction:** a first run showed t = +6.2, driven entirely by the ticker-B hourly/daily
+  mismatch. Fixed; the t = 6.2 result was an artifact.
+
+### 4. Anticipation variant (signal knowable at 13:30)
+`r(13:30→close)` ~ gamma·r(close[t−1]→13:30)/ADV + controls, 741 stocks with hourly data:
+- pooled **t = 2.7** (all of it 13:30→15:30, t = 3.2; last 30 min t = −0.6)
+- **within-stock t = 0.9** (not robust)
+- top-5% matched excess: **+18.8 bps (t ≈ 2.5)**; by year 2024 +50 (5 names, mostly MSTR),
+  2025 +22, **2026 +1** → decaying; top 10 days = 71%, top 5 names (MSTR, SMR, QBTS, ASTS, IREN) = 68%
+- **pre-launch placebo: +13.8 ± 13.4 bps vs +18.8 real → indistinguishable.**
+  Afternoon momentum looks like a property of volatile retail names, not of LETF flow.
+
+### What I learned
+1. The single-stock LETF close flow is **absorbed before and at the close**. There's no residual
+   pressure in the last 30 minutes and no net reversal by t+1's close. This is consistent with a
+   crowded, anticipated flow (the literature and the 2025–26 press coverage).
+2. The one LETF-specific result (within-stock overnight reversal) is statistically robust but
+   economically ~1–2 bps at typical flows, and possibly a Yahoo-open artifact.
+3. The strongest raw patterns (overnight rebound after big down days; afternoon momentum)
+   belong to the *type of stock*: speculative retail/crypto/AI-infra names on theme-wide move days.
+
+### Verdict against the pre-committed criteria
+Magnitude — fails at typical flows. Concentration — fails (top-10 days dominate).
+Net reversal by next close — absent. Recent data — the anticipation effect is decaying (2026 ≈ 0).
+**The overnight-fade version of Strategy A does not pass on free data.** Remaining unexamined:
+official open/close prints and actual imbalances (paid/IBKR), and the LETF's own price vs NAV
+(handoff item 10), which is testable for free.
