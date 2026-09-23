@@ -25,14 +25,14 @@ Where exposure comes from:
 |---|---|---|
 | Direxion | `direxion.com/holdings/<T>.csv` | yes (every swap leg) |
 | Defiance | full-holdings table + fund page | yes (weights × net assets) |
-| T-REX | fund page holdings block | yes |
+| T-REX | fund page holdings block | recorded but **not trusted**: the pages list stale or duplicate swap rows (2.8–5x on some 2x funds), so the model uses L×A |
 | GraniteShares | the JSON endpoints their fund page uses | yes |
 | KraneShares | dated holdings CSV | yes |
 | Tradr, Leverage Shares, ProShares, and any native failure | stockanalysis.com fund page | net assets + shares only. The flow model then uses E = L×A |
 
 Tradr's own data widget is behind reCAPTCHA, so it is not scraped.
 
-First full run (2026-09-23): see the summary line printed at the end, or `funds.parquet`.
+First full run (2026-09-23): 292 funds, net assets for all of them, trusted exposure for 135. For those 135, exposure ÷ net assets matched the target leverage within 0.1% for all but one fund (Direxion, 6% off).
 The `error` column says why any fund fell back or failed.
 
 **Scheduling.**
