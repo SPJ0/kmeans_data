@@ -32,14 +32,24 @@ START = pd.Timestamp("2019-01-01")
 BENCH = "QQQ"
 
 
-def price_1530(ticker: str) -> pd.Series:
+def hourly_opens(ticker: str, daily_close: pd.Series | None = None) -> pd.DataFrame:
+    """Opens of the 13:30 and 15:30 hourly bars. Dates where the 15:30 bar's close
+    is more than 3% from the official daily close are dropped as bad/mismatched
+    data (e.g. ticker B: Barnes Group hourly vs Barrick daily history before 2025)."""
     h = load_hourly(ticker)
     if h.empty:
-        return pd.Series(dtype=float)
-    b = h[(h.index.hour == 15) & (h.index.minute == 30)]
-    s = b["Open"].copy()
-    s.index = b.index.tz_localize(None).normalize()
-    return s[~s.index.duplicated()]
+        return pd.DataFrame(columns=["p1330", "p1530"], dtype=float)
+    h = h[h.index.minute == 30]
+    day = h.index.tz_localize(None).normalize()
+    o = pd.DataFrame({"day": day, "hour": h.index.hour, "open": h["Open"].values, "close": h["Close"].values})
+    o = o.drop_duplicates(["day", "hour"])
+    op = o.pivot(index="day", columns="hour", values="open")
+    cl = o.pivot(index="day", columns="hour", values="close")
+    out = pd.DataFrame({"p1330": op.get(13), "p1530": op.get(15)})
+    if daily_close is not None and 15 in cl:
+        ok = np.log(cl[15] / daily_close.reindex(cl.index)).abs() <= 0.03
+        out = out[ok]
+    return out
 
 
 def stock_features(ticker: str, bench: pd.DataFrame | None = None) -> pd.DataFrame:
@@ -63,10 +73,14 @@ def stock_features(ticker: str, bench: pd.DataFrame | None = None) -> pd.DataFra
     out["cc1"] = d["Adj Close"].shift(-1) / d["Adj Close"] - 1
     out["cc5"] = d["Adj Close"].shift(-5) / d["Adj Close"] - 1
     out["gap_t"] = (d["Open"] * f) / (d["Close"].shift(1) * f.shift(1)) - 1  # overnight into t
-    p = price_1530(ticker).reindex(out.index)
+    ho = hourly_opens(ticker, d["Close"]).reindex(out.index)
+    p = ho["p1530"]
     out["p1530"] = p
     out["r_pre"] = p / d["Close"].shift(1) - 1
     out["r_last30"] = d["Close"] / p - 1
+    out["r_to1330"] = ho["p1330"] / d["Close"].shift(1) - 1
+    out["r_1330_close"] = d["Close"] / ho["p1330"] - 1
+    out["r_1330_1530"] = p / ho["p1330"] - 1
     # dates of t+1 and t+5 for hold-out masking
     idx = pd.Series(out.index, index=out.index)
     out["d_next"] = idx.shift(-1)
@@ -76,7 +90,7 @@ def stock_features(ticker: str, bench: pd.DataFrame | None = None) -> pd.DataFra
         cov = ar.rolling(60, min_periods=40).cov(b["r_adj"])
         var = b["r_adj"].rolling(60, min_periods=40).var()
         out["beta"] = (cov / var).shift(1).clip(-1, 5)
-        for c in ("on1", "oc1", "cc1", "cc5", "r_last30", "r_pre", "r_t"):
+        for c in ("on1", "oc1", "cc1", "cc5", "r_last30", "r_pre", "r_t", "r_to1330", "r_1330_close", "r_1330_1530"):
             out[c + "_x"] = out[c] - out["beta"] * b[c]
     out = out[out.index >= START]
     # hold-out masking
@@ -84,7 +98,7 @@ def stock_features(ticker: str, bench: pd.DataFrame | None = None) -> pd.DataFra
         out.loc[~(out["d_next"] < HOLDOUT), c] = np.nan
     for c in [c for c in out.columns if c.startswith("cc5")]:
         out.loc[~(out["d_next5"] < HOLDOUT), c] = np.nan
-    for c in [c for c in out.columns if c.startswith(("r_last30", "r_pre", "r_t", "r_adj"))]:
+    for c in [c for c in out.columns if c.startswith(("r_last30", "r_pre", "r_t", "r_adj", "r_1330"))]:
         out.loc[out.index >= HOLDOUT, c] = np.nan
     out = out[out.index < HOLDOUT]
     out["ticker"] = ticker
@@ -95,7 +109,7 @@ def bench_frame() -> pd.DataFrame:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         b = stock_features(BENCH)
-    return b[["r_adj", "on1", "oc1", "cc1", "cc5", "r_last30", "r_pre", "r_t"]]
+    return b[["r_adj", "on1", "oc1", "cc1", "cc5", "r_last30", "r_pre", "r_t", "r_to1330", "r_1330_close", "r_1330_1530"]]
 
 
 def build(tickers: list[str], min_adv: float = 0.0) -> pd.DataFrame:
@@ -127,6 +141,7 @@ def attach_flows(p: pd.DataFrame) -> pd.DataFrame:
     p["g_adv"] = p["gamma"] / p["adv20"]  # flow per unit return, in ADVs
     p["flow_adv"] = p["flow"] / p["adv20"]
     p["flow_pre_adv"] = p["flow_pre"] / p["adv20"]
+    p["flow_1330_adv"] = p["gamma"] * p["r_to1330"] / p["adv20"]  # flow predicted at 13:30
     return p
 
 

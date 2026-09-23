@@ -263,3 +263,51 @@ irrelevant except NVDA/TSLA; mid-cap names with ~$150M of LETF AUM already reach
 ratios. The MSTR fund complex is much smaller now than at its late-2024 peak, so the
 cross-section of "treated" names moves around a lot over time. That variation helps
 identification.
+
+---
+
+## 2026-09-23 — Data build (no outcome data examined in this entry)
+
+User direction: do everything possible with free data; estimate what can't be collected.
+
+**Universe** (`universe/`): union of SEC investment-company series/class snapshots 2022–2026
+(includes closed funds), parsed names → leverage, direction, reset frequency, underlying.
+Then verified each fund's leverage by regressing its daily return on the underlying's
+(`verify_leverage.py`), and built a per-date leverage schedule (`finalize.py`).
+Findings that mattered:
+- **Ticker reuse** is common: NVDB (AXS 1.25x → ProShares 2x), TSLI (GraniteShares −1x →
+  ProShares 2x), and AMAX/COPL/FORL/MARU/CRML now point at unrelated products. A series only
+  owns a ticker within its N-PORT activity window.
+- **SEC ticker errors**: T-REX inverse AMD/PLTR are listed under Direxion's −1x tickers.
+- **Leverage changes** detected from returns: TSLQ −1x → −2x, CONI, NVDS; MSTX 1.75x → 2x.
+- Two bond funds slipped in through "ultra-short" wording; excluded.
+- Final: **286 daily-reset single-stock series on 160 underlyings**, 240 with attributable
+  prices. Weekly/monthly-reset funds excluded (they don't rebalance daily).
+
+**Fund assets** (`flows/assets.py`): 2,062 N-PORT filings (324 series) via EDGAR full-text
+search; exact daily AUM from GraniteShares' API (34 funds) and ProShares' history file.
+- N-PORT monthly *returns* are unreliable (decimals vs percent; not split-adjusted, e.g. MULL
+  −95% in a month its assets grew 8x). So: quarter-end net assets → share-count anchors,
+  monthly N-PORT dollar flows shape the path between anchors, NAV from our own price proxy.
+- **Validation vs exact issuer AUM** (37 funds): AUM-weighted median |log error| **4.6%**;
+  90th percentile ~28%, concentrated in months of explosive fund growth. N-PORT's
+  month 1/2/3 ordering was confirmed empirically (reversed order: 14.7% error; no flows: 9.6%).
+- 38% of fund-day AUM is exact, 58% interpolated, 4% extrapolated.
+- Reconstructed total single-stock LETF AUM: $2B (end-2023) → $19B (end-2024) → $28B
+  (end-2025) → $21B (Mar 2026). Big funds check out (TSLL $6.1B, NVDL $4.7B end-2025).
+- Issuer AUM changes correlate −0.07 to −0.23 with the *prior* day's NAV change: creations
+  and redemptions lean contrarian, as expected (partial offset to rebalancing).
+
+**Prices**: Yahoo daily for LETFs, underlyings and ~5,700 listed common stocks (control
+universe, current listings only). Yahoo 60-minute bars reach back to Oct 2023 (more than the
+documented 730 days). The last hourly bar's close is the last trade before 16:00, 2–3 bps from
+the official close; so official close = daily close, and "15:30 price" = open of the 15:30 bar.
+- Data bug found and fixed: ticker **B** has Barnes Group hourly history but Barrick daily
+  history before 2025. Rule: drop hourly data on any day where the 15:30 bar's close is >3% from
+  the daily close.
+
+**Panel** (`analysis/panel.py`): 2.7M stock-days (3,499 stocks with ADV ≥ $20M, 2019 → hold-out),
+with **hold-out masking enforced in code**: any outcome whose window reaches 2026-03-23 is NaN.
+Flow = Gamma × r_t with Gamma = Σ A_{t−1} L(L−1) (known before the open).
+Earnings days ±1 excluded for treated names (Yahoo calendar; after-close reports assigned to
+the next session).
