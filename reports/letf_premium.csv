@@ -1,0 +1,21 @@
+item,value,n,se,n_funds,share_small
+"proxy validation corr(e_t, dPrem_t) exact funds",0.6925247580856988,15183,,,
+exact: median |prem| bps,9.45121120035149,15221,,,
+exact: p90 |prem| bps,30.48496648293685,15221,,,
+exact: median AR(1) of premium across funds,0.08619070966634927,38,,,
+exact: next-day premium reversion when |prem|>=10bps (bps),20.462107950232923,7224,0.4327104887220595,38.0,0.762735326688815
+exact: next-day premium reversion when |prem|>=25bps (bps),37.20956900006174,2190,0.932674583102469,38.0,0.821917808219178
+exact: next-day premium reversion when |prem|>=50bps (bps),63.58778946716772,495,2.9255336194504102,37.0,0.8606060606060606
+exact: next-day premium reversion when |prem|>=100bps (bps),124.8523717906656,89,9.793782049182088,28.0,0.9213483146067416
+proxy: slope of e_(t+1) on e_t [all],-0.22228022848714013,60526,0.0359465493843156,,
+proxy: slope of e_(t+1) on e_t [big-move days (top 10% |L*r|)],-0.390189872350246,6164,0.040221069906006594,,
+proxy: slope of e_(t+1) on e_t [funds AUM>=$50M],-0.14363944188027092,19480,0.03512336906474733,,
+proxy: slope of e_(t+1) on e_t [funds AUM<$50M],-0.2568659265954575,41046,0.03578220659370801,,
+"proxy: next-day reversal when |e_t|>=25bps, big funds (bps)",15.6556291242702,3838,1.0710643550144998,89.0,
+"proxy: next-day reversal when |e_t|>=25bps, small funds (bps)",21.899127316606418,12564,0.7191343689224252,219.0,
+"proxy: next-day reversal when |e_t|>=50bps, big funds (bps)",22.093876759089163,1224,2.8270956427877967,85.0,
+"proxy: next-day reversal when |e_t|>=50bps, small funds (bps)",35.38253926591974,4852,1.3766665458397263,215.0,
+"proxy: next-day reversal when |e_t|>=100bps, big funds (bps)",33.115574292229816,249,9.277546172005739,64.0,
+"proxy: next-day reversal when |e_t|>=100bps, small funds (bps)",58.12730943723092,1260,3.4594045115427416,177.0,
+exact: premium signed by fund move on big-move days (bps),-3.686917786296244,1533,0.785299933576149,,
+proxy: premium signed by fund move on big-move days (bps),-2.9782603549728934,6164,0.9779779020353576,,

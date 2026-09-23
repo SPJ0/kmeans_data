@@ -1,7 +1,7 @@
 # Research Log — Auction-Flow Strategies
 
 Newest entries at the bottom. Each entry: what was tried, why, result, what was learned.
-Variant counter (for multiple-testing discount): **~34 outcome-bearing tests run so far** (as of 2026-09-23, see entries below).
+Variant counter (for multiple-testing discount): **~50 outcome-bearing tests run so far** (as of 2026-09-23, see entries below).
 
 ## Ground rules (fixed 2026-09-23, before any outcome data was examined)
 
@@ -378,3 +378,87 @@ Net reversal by next close — absent. Recent data — the anticipation effect i
 **The overnight-fade version of Strategy A does not pass on free data.** Remaining unexamined:
 official open/close prints and actual imbalances (paid/IBKR), and the LETF's own price vs NAV
 (handoff item 10), which is testable for free.
+
+---
+
+## 2026-09-23 — Item 10: the LETF's own closing price vs NAV (new candidate)
+
+User direction: skip the imbalance recorder for now; test item 10; if it fails, propose a pivot.
+Tests in this entry: ~16 (cumulative ~50). This candidate was motivated by mechanism (handoff item 10),
+not found by sweeping, but it's still the ~40th+ thing looked at, so it needs the hold-out.
+
+**Data.** Exact premium = ln(Yahoo close / NAV) for GraniteShares and ProShares funds (38 funds).
+Proxy for all 240 attributable funds: e_t = ln(1+r_fund) − ln(1+L·r_und), i.e. the change in premium
+plus fee/financing drift. Proxy vs exact ΔPremium correlation: **0.69**.
+(Yahoo Close is not dividend-adjusted; LETF distribution days add noise, biasing reversion *down*.)
+
+**Findings (in-sample, 2022-07 → 2026-03-19)**
+1. Closing premiums are small and transient: median |premium| 9.5 bps, p90 30 bps; median AR(1) 0.09.
+2. Big premiums revert almost fully the next day. Exact premium ≥25 bps → 37 bps reversion;
+   ≥50 → 64; ≥100 → 125 (SEs 1–10 bps). Proxy slope of e_{t+1} on e_t: −0.22 overall, −0.39 on big-move days.
+   Most events are in small funds (AUM < $50M: 76–92% of exact-premium events).
+3. **Not stale prints:** loading of e_t on L·(underlying 15:30→close move) is only −0.03 even in the
+   thinnest quartile (a stale print would load near −1). Reversion persists in the most liquid quartile
+   (fund ADV ~$112M): 23 bps for |e| ≥ 50 bps.
+4. **The dislocation forms in the closing process and is gone by next morning** (hourly split,
+   `letf_premium_intraday.py`). For funds with ADV ≥ $20M:
+   - the 15:30→close part of e_t reverts at slope −0.52 (t = −20);
+   - the pre-15:30 part reverts at only −0.09;
+   - 64% of the last-30-min part is gone by 10:30 on t+1.
+   Events with |e| ≥ 50 bps: ~30% of the premium change forms after 15:30; reversion 25–31 bps,
+   **all by 10:30 t+1**, nothing after.
+5. **By listing venue:** Cboe BZX listings have 22% event rate and 37 bps reversion; NYSE Arca
+   14% and 29 bps; Nasdaq 7% and 29 bps.
+6. Rough P&L (`letf_premium_sim.py`):
+   - rule: fade |e_t| ≥ k at the close with an L·underlying hedge, exit next close;
+   - size: min($1M, 1% of fund ADV); cost 5–10 bps + 1 bp hedge;
+   - result: net **+5 to +26 bps per event** depending on threshold, cost and universe;
+     **$0.5–2M/yr in 2025**; daily Sharpe 1.5–4.6; top 10 days 22–74% of P&L (lower thresholds
+     are less concentrated).
+
+**Why this could be real.** It's the user's 2007 trade in a new, small venue:
+- LETF closing auctions (especially Cboe BZX listings) are thin and absorb price-insensitive retail
+  MOC and closing flow;
+- fair value (NAV = L × the underlying's closing-auction price) is known exactly at 4:00;
+- the size is too small for large firms, and the dislocation clears by the next morning.
+
+**Why it may not be, in order of importance:**
+1. **Executability.** Yahoo's close is the official closing price. For a thin ETF with no or small cross
+   it may be a last sale or a tiny auction print. If the print is at the edge of a wide spread, the
+   "reversion" is bid-ask bounce, which can't be captured. Everything above is consistent with close-price
+   noise *or* with a real auction imbalance; only closing-auction prints/volumes and NBBO at 16:00
+   distinguish them.
+2. **Capacity.** LETF closing-auction volume is unknown. 1% of fund ADV is a guess, and for Cboe listings
+   the closing auction may be much smaller.
+3. **Entry timing.** The premium is only known after both auctions print. Live, you'd act on indicative
+   prices (imbalance feeds for the LETF and the underlying) with limit or imbalance-only orders. Fill rates
+   and adverse selection need modelling from imbalance data.
+4. **NAV basis.** Funds holding options (e.g. MSTU in late 2024) or with swap resets off the close
+   make NAV ≠ L × underlying intraday. Proxy noise, but also hedge basis risk.
+5. **Multiple testing.** ~50 tests so far in total. Needs the hold-out once executability is settled.
+
+**Proposed next steps (for this candidate):**
+- (free) The 1-minute NBBO at 15:59–16:00 for a sample of LETFs from IBKR historical data (BID_ASK bars).
+  This tells whether the closing premium exists at the *mid*, which separates bounce from real
+  dislocation. Needs the user's IBKR session; I can write the script.
+- (cheap/paid, ask first) Closing-cross prints and imbalance messages for LETF tickers: Nasdaq ITCH for
+  Nasdaq listings, Cboe BZX auction feed for Cboe listings (Databento). Measures auction size and whether
+  our limit orders would have filled.
+- The live imbalance recorder (skipped for now) becomes directly relevant here: record LETF *and*
+  underlying closing imbalances 15:50–16:00.
+
+## 2026-09-23 — Item 4: fallback directions (proposal only, nothing built)
+
+Item 10 did not fail, so these are held in reserve, ranked by fit with the core principle
+(scheduled, price-insensitive, computable flow in a venue too small for big firms):
+1. **Other thin ETF closing auctions against known NAV.** The same trade in non-leveraged niche ETFs:
+   single-stock option-income (YieldMax et al.), buffer ETFs on reset days, crypto spot ETFs on big BTC
+   days. Same data pipeline; natural extension if the LETF result holds up.
+2. **Buffer/defined-outcome ETF reset days.** Monthly/quarterly resets roll large FLEX option
+   positions on known dates. The flow is in index options, so we'd need options data (not free, and
+   outside the IBKR equity setup).
+3. **Smaller index reconstitutions** (S&P SmallCap 600 / MidCap 400 adds and deletes, CRSP, sector-fund
+   rebalances). Known dates and names, closing-auction flow in small caps. Crowded at the Russell level,
+   less so for smaller indexes. Needs historical constituent-change lists (partly free from press releases).
+4. **Option-income ETFs' scheduled call writing** on single stocks. Pressure is in options, not the stock,
+   so it fits our tools poorly.
