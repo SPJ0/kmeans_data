@@ -1,0 +1,9 @@
+ib_async==2.1.0
+matplotlib==3.11.2
+numpy==2.4.6
+pandas==3.0.6
+pyarrow==25.0.1
+pytest==9.1.1
+requests==2.34.2
+statsmodels==0.15.0
+yfinance==1.7.0
