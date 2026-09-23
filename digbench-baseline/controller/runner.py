@@ -29,6 +29,7 @@ from datetime import datetime, timedelta, timezone
 from . import sandbox
 from .digclient import DEFAULT_SERVER, AmbiguousCreate, BenchError, DigClient, player_slice
 from .gamectl import EventLog, GameController, format_state, utc_now
+from .netfilter import EgressFilter
 
 PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROMPTS = os.path.join(PROJECT, "prompts")
@@ -162,6 +163,7 @@ def build_home(key: str, run_dir: str, cap: str) -> dict:
         os.makedirs(d, mode=0o700, exist_ok=True)
     os.chmod(adir, 0o700)
     shutil.copy2(os.path.join(PROJECT, "controller", "relay.py"), os.path.join(tool, "relay.py"))
+    shutil.copy2(os.path.join(PROJECT, "controller", "netbridge.py"), os.path.join(tool, "netbridge.py"))
     shutil.copy2(CA_BUNDLE_SRC, os.path.join(tool, "ca-bundle.crt"))
     if TEST_PLAYER_BIN:
         shutil.copy2(TEST_PLAYER_BIN, os.path.join(tool, "fake_player.py"))
@@ -178,7 +180,8 @@ def build_home(key: str, run_dir: str, cap: str) -> dict:
         f.write("#!/bin/sh\n"
                 f"GAME_SOCKET={sock} GAME_CAPABILITY={cap} exec python3 {os.path.join(tool, 'relay.py')} \"$@\"\n")
     os.chmod(wrapper, 0o755)
-    return {"adir": adir, "home": home, "work": os.path.join(home, "work"), "tool": tool, "sock": sock}
+    return {"adir": adir, "home": home, "work": os.path.join(home, "work"), "tool": tool, "sock": sock,
+            "netsock": os.path.join(tool, "net.sock")}
 
 
 def claude_argv(paths: dict, session_id: str, resume: bool) -> list[str]:
@@ -275,10 +278,11 @@ def run_attempt(a) -> dict:
     # 2. Fresh player home + controller socket.
     paths = build_home(key, run_dir, cap)
     ctl.serve(paths["sock"], cap)
+    egress = EgressFilter(paths["netsock"], lambda kind, **kw: log.write(kind, **kw)).start()
     env = sandbox.player_env(paths["home"])
 
     def launch(resume: bool) -> Player:
-        cmd = sandbox.sandbox_command(key, env, claude_argv(paths, session_uuid, resume), paths["work"])
+        cmd = sandbox.sandbox_command(key, env, claude_argv(paths, session_uuid, resume), paths["work"], paths["tool"])
         log.write("player_launch", resume=resume, argv=claude_argv(paths, session_uuid, resume),
                   env_keys=sorted(env.keys()))
         return Player(cmd, os.path.join(run_dir, "stream.jsonl"), os.path.join(run_dir, "stderr.log"), events, log)
@@ -388,6 +392,7 @@ def run_attempt(a) -> dict:
 
     ctl.close(stop_reason or "unknown")
     player.kill()
+    egress.stop()
     log.write("player_killed", stop_reason=stop_reason)
     return finish(meta, run_dir, log, ctl, stop_reason, counts, paths, [token, cap], init_models)
 
