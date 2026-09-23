@@ -42,12 +42,19 @@ def main(argv=None):
         if got != h:
             sys.exit(f"frozen file changed: {rel} ({got} != {h}); create a new protocol version instead")
     conc = int(manifest["max_concurrent"])
-    items = [x for x in manifest["attempts"] + manifest.get("replacements", [])
-             if not a.only or x["id"] in a.only]
+    # Replacements live in a separate file so the frozen manifest never changes. Each entry:
+    # {"id": "M03R1", "replaces": "M03", "game": ..., "phase": "replacement",
+    #  "phase_dir": "replacement", "order": 101, "reason": "<documented infrastructure failure>"}
+    rpath = os.path.join(os.path.dirname(os.path.abspath(a.manifest)), "replacements.json")
+    repl = json.load(open(rpath)) if os.path.exists(rpath) else []
+    if len(repl) > int(manifest["max_replacements"]):
+        sys.exit("more replacements than the frozen policy allows")
+    items = [x for x in manifest["attempts"] + repl if not a.only or x["id"] in a.only]
     items.sort(key=lambda x: x["order"])
     slots = threading.Semaphore(conc)
     slot_ids = list(range(conc))
     slot_lock = threading.Lock()
+    os.makedirs(os.path.join(PROJECT, "runs", manifest["phase_dir"]), exist_ok=True)
     logf = open(os.path.join(PROJECT, "runs", manifest["phase_dir"], "scheduler.log"), "a")
 
     def log(msg):

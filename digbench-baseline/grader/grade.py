@@ -12,6 +12,7 @@ import argparse
 import json
 import math
 import os
+import re
 from collections import Counter, defaultdict
 
 OFFICIAL_SERVER = "https://api.digbench.ai"
@@ -73,6 +74,37 @@ def tool_calls_from_stream(path: str) -> Counter:
                     if isinstance(blk, dict) and blk.get("type") == "tool_use":
                         c[blk.get("name", "?")] += 1
     return c
+
+
+AUDIT_TERMS = re.compile(r"dig-?bench|digbench|discos|tech_report|battleday|discovery in games|"
+                         r"\bP-?(1|16|19)\b.*(rule|solution|walkthrough|guide|cheat)", re.I)
+
+
+def audit_stream(path: str) -> dict:
+    """Contamination audit inputs: every web lookup and every shell command mentioning a URL or a
+    benchmark term. Flags are for review; classification as contaminated is a recorded decision."""
+    web, flagged = [], []
+    if not os.path.exists(path):
+        return {"web_calls": web, "flagged": flagged}
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            try:
+                obj = json.loads(json.loads(line)["line"])
+            except (ValueError, KeyError, TypeError):
+                continue
+            if obj.get("type") != "assistant":
+                continue
+            for blk in (obj.get("message") or {}).get("content") or []:
+                if not (isinstance(blk, dict) and blk.get("type") == "tool_use"):
+                    continue
+                name, inp = blk.get("name", ""), blk.get("input") or {}
+                text = json.dumps(inp, ensure_ascii=False)
+                if name in ("WebFetch", "WebSearch"):
+                    web.append({"tool": name, "input": text[:300]})
+                if AUDIT_TERMS.search(text) or (name == "Bash" and re.search(r"https?://|curl|wget", text)
+                                                  and not re.search(r"pypi|npmjs|pythonhosted", text)):
+                    flagged.append({"tool": name, "input": text[:300]})
+    return {"web_calls": web, "flagged": flagged}
 
 
 def derive(run_dir: str, attempt_seconds: float = 3600.0) -> dict:
@@ -200,6 +232,13 @@ def derive(run_dir: str, attempt_seconds: float = 3600.0) -> dict:
     rec["diagnostics"] = dict(diag)
     rec["tool_calls"] = dict(tool_calls_from_stream(os.path.join(run_dir, "stream.jsonl")))
     rec["late_events"] = len(late)
+    eg = [e for e in evs if e["kind"] == "egress"]
+    rec["egress_hosts"] = dict(Counter(f"{e.get('host')}:{e.get('decision')}" for e in eg))
+    au = audit_stream(os.path.join(run_dir, "stream.jsonl"))
+    au["denied_egress"] = [e.get("host") for e in eg if e.get("decision") == "denied_benchmark_host"]
+    rec["contamination_audit"] = au
+    rec["needs_contamination_review"] = bool(au["flagged"] or au["denied_egress"])
+    rec["contaminated"] = False
 
     # ---- integrity checks
     ck = rec["checks"]
@@ -271,6 +310,8 @@ def build(manifest: dict, runs_root: str, extra_incidents: dict | None = None) -
             rec["manual_incident"] = inc
             if inc.get("classify_as_infrastructure"):
                 rec["infrastructure_interrupted"] = True
+            if inc.get("contaminated"):
+                rec["contaminated"] = True
         records.append(rec)
     by_id = defaultdict(list)
     for r in records:
@@ -295,7 +336,7 @@ def build(manifest: dict, runs_root: str, extra_incidents: dict | None = None) -
         return {"per_game": per_game, "macro_completion_rate": sum(rates) / len(rates) if rates else None}
 
     originals = [r for r in records if r["phase"] == "measured"]
-    valid = [r for r in records if not r["infrastructure_interrupted"]]
+    valid = [r for r in records if not r["infrastructure_interrupted"] and not r["contaminated"]]
     return {
         "manifest_version": manifest.get("version"),
         "records": records, "rejected_runs": rejected,
@@ -342,8 +383,9 @@ def tables_md(res: dict) -> str:
     L += ["", "## Integrity", "", "```", json.dumps(res["manifest_checks"], indent=2)]
     for r in res["records"]:
         flags = {k: v for k, v in r["checks"].items() if v}
-        if flags or r.get("late_events"):
-            L.append(f"{r['attempt_id']}: {json.dumps(flags)} late_events={r.get('late_events')}")
+        if flags or r.get("late_events") or r.get("needs_contamination_review") or r.get("contaminated"):
+            L.append(f"{r['attempt_id']}: {json.dumps(flags)} late_events={r.get('late_events')} "
+                     f"contamination_review={r.get('needs_contamination_review')} contaminated={r.get('contaminated')}")
     if res["rejected_runs"]:
         L.append("rejected (not eligible for measured tables): " + json.dumps(res["rejected_runs"], indent=1))
     L.append("```")
