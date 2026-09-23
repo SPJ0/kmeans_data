@@ -15,3 +15,6 @@ data/raw/sec/series_class_*.csv
 *.log
 data/*.txt
 data/raw/lists/*.html
+# native holdings files stay local; the parsed parquet in each day's folder has the same content
+data/holdings/*/raw/
+data/imbalance/

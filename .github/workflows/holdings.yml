@@ -1,0 +1,41 @@
+# Daily leveraged-ETF holdings archive (Phase A2). Scheduled workflows only run from the
+# repository's default branch, so this starts once the branch is merged there.
+name: holdings-scraper
+
+on:
+  schedule:
+    - cron: "15 12 * * 1-5"   # 12:15 UTC = 8:15 ET (EDT) / 7:15 ET (EST), before the open
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: holdings-scraper
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pandas pyarrow requests lxml numpy
+      - name: Scrape holdings
+        run: python -m recorders.holdings | tee scrape.log
+      - name: Summary
+        run: |
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          tail -n 3 scrape.log >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+      - name: Commit snapshot
+        run: |
+          git config user.name "holdings-bot"
+          git config user.email "holdings-bot@users.noreply.github.com"
+          git add data/holdings
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git commit -m "holdings snapshot $(TZ=America/New_York date +%F) [skip ci]"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done

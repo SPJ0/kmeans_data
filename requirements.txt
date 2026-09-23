@@ -9,3 +9,4 @@ pytest
 lxml
 beautifulsoup4
 reportlab
+ib_async
